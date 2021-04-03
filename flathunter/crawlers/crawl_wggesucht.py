@@ -5,7 +5,7 @@ import re
 import requests
 from bs4 import BeautifulSoup
 
-from flathunter.abstract_crawler import Crawler
+from flathunter.crawlers.abstract_crawler import Crawler
 
 
 class CrawlWgGesucht(Crawler):

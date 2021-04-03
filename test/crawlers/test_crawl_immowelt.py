@@ -1,7 +1,7 @@
 import pytest
 
 from flathunter.config import Config
-from flathunter.crawl_immowelt import CrawlImmowelt
+from flathunter.crawlers.crawl_immowelt import CrawlImmowelt
 from test_util import count
 
 DUMMY_CONFIG = """

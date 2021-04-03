@@ -2,7 +2,7 @@
 import logging
 import re
 
-from flathunter.abstract_crawler import Crawler
+from flathunter.crawlers.abstract_crawler import Crawler
 
 
 class CrawlImmobiliare(Crawler):

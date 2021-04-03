@@ -3,7 +3,7 @@ import datetime
 import logging
 import re
 
-from flathunter.abstract_crawler import Crawler
+from flathunter.crawlers.abstract_crawler import Crawler
 
 
 class CrawlEbayKleinanzeigen(Crawler):

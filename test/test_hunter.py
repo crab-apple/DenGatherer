@@ -3,7 +3,7 @@ import unittest
 
 from dummy_crawler import DummyCrawler
 from flathunter.config import Config
-from flathunter.crawl_immowelt import CrawlImmowelt
+from flathunter.crawlers.crawl_immowelt import CrawlImmowelt
 from flathunter.hunter import Hunter
 from flathunter.idmaintainer import IdMaintainer
 from test_util import count

@@ -6,7 +6,7 @@ import re
 from jsonpath_ng import parse
 from selenium.common.exceptions import JavascriptException
 
-from flathunter.abstract_crawler import Crawler
+from flathunter.crawlers.abstract_crawler import Crawler
 
 
 class CrawlImmobilienscout(Crawler):

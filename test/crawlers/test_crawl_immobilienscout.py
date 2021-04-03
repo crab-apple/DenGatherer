@@ -4,7 +4,7 @@ import os
 import pytest
 
 from flathunter.config import Config
-from flathunter.crawl_immobilienscout import CrawlImmobilienscout
+from flathunter.crawlers.crawl_immobilienscout import CrawlImmobilienscout
 
 DUMMY_CONFIG = """
 urls:
@@ -20,7 +20,7 @@ def crawler():
 
 
 def test_parse_exposes_from_json(crawler):
-    with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), "fixtures",
+    with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), "../fixtures",
                            "immo-scout-IS24-object.json")) as fixture:
         data = json.load(fixture)
     entries = crawler.get_entries_from_json(data)

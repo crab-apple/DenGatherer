@@ -4,7 +4,7 @@ from random import choice
 from random import randint
 from random import seed
 
-from flathunter.abstract_crawler import Crawler
+from flathunter.crawlers.abstract_crawler import Crawler
 
 
 class DummyCrawler(Crawler):
