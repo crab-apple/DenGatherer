@@ -25,8 +25,16 @@ def test_crawler(crawler):
     assert len(entries) > 0
     assert entries[0]['id'] > 0
     assert entries[0]['url'].startswith("https://www.immowelt.de/expose")
-    for attr in ['title', 'price', 'size', 'rooms', 'address', 'image']:
+    for attr in ['title', 'price', 'size', 'rooms', 'address']:
         assert entries[0][attr] is not None
+
+    # We don't check that all listings have an image, as sometimes some don't.
+    # However, let's check that at least one has an image to make sure that this part
+    # isn't broken.
+    def has_image(entry):
+        return entry['image'] is not None
+
+    assert any(map(has_image, entries))
 
 
 def test_dont_crawl_other_urls(crawler):
