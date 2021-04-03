@@ -1,11 +1,13 @@
 """Calculate Google-Maps distances between specific locations and the target flat"""
-import logging
 import datetime
+import logging
 import time
 import urllib
+
 import requests
 
 from flathunter.abstract_processor import Processor
+
 
 class GMapsDurationProcessor(Processor):
     """Implementation of Processor class to calculate travel durations"""
@@ -33,7 +35,7 @@ class GMapsDurationProcessor(Processor):
                 name = duration.get('name')
                 for mode in duration.get('modes', list()):
                     if 'gm_id' in mode and 'title' in mode \
-                                       and 'key' in self.config.get('google_maps_api', dict()):
+                            and 'key' in self.config.get('google_maps_api', dict()):
                         duration = self.get_gmaps_distance(address, dest, mode['gm_id'])
                         out += "> %s (%s): %s\n" % (name, mode['title'], duration)
 

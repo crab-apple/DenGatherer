@@ -1,10 +1,9 @@
 """ Startup file for Google Cloud deployment or local webserver"""
-from flathunter.idmaintainer import IdMaintainer
-from flathunter.googlecloud_idmaintainer import GoogleCloudIdMaintainer
-from flathunter.web_hunter import WebHunter
 from flathunter.config import Config
-
+from flathunter.googlecloud_idmaintainer import GoogleCloudIdMaintainer
+from flathunter.idmaintainer import IdMaintainer
 from flathunter.web import app
+from flathunter.web_hunter import WebHunter
 
 config = Config()
 

@@ -1,9 +1,10 @@
 """Flathunter implementation for website"""
 import logging
 
-from flathunter.hunter import Hunter
 from flathunter.filter import Filter
+from flathunter.hunter import Hunter
 from flathunter.processor import ProcessorChain
+
 
 class WebHunter(Hunter):
     """Flathunter implementation for website. Designed to hunt all exposes from
@@ -15,18 +16,18 @@ class WebHunter(Hunter):
     def hunt_flats(self, max_pages=1):
         """Crawl all URLs, and send notifications to users of new flats"""
         filter_set = Filter.builder() \
-                       .read_config(self.config) \
-                       .filter_already_seen(self.id_watch) \
-                       .build()
+            .read_config(self.config) \
+            .filter_already_seen(self.id_watch) \
+            .build()
 
         processor_chain = ProcessorChain.builder(self.config) \
-                                        .apply_filter(filter_set) \
-                                        .crawl_expose_details() \
-                                        .save_all_exposes(self.id_watch) \
-                                        .resolve_addresses() \
-                                        .calculate_durations() \
-                                        .send_telegram_messages() \
-                                        .build()
+            .apply_filter(filter_set) \
+            .crawl_expose_details() \
+            .save_all_exposes(self.id_watch) \
+            .resolve_addresses() \
+            .calculate_durations() \
+            .send_telegram_messages() \
+            .build()
 
         new_exposes = []
         for expose in processor_chain.process(self.crawl_for_exposes(max_pages=max_pages)):
@@ -37,9 +38,9 @@ class WebHunter(Hunter):
                 continue
             filter_set = Filter.builder().read_config(settings).build()
             processor_chain = ProcessorChain.builder(self.config) \
-                                            .apply_filter(filter_set) \
-                                            .send_telegram_messages([user_id]) \
-                                            .build()
+                .apply_filter(filter_set) \
+                .send_telegram_messages([user_id]) \
+                .build()
             for message in processor_chain.process(new_exposes):
                 self.__log__.debug("Sent expose %d to user %d", message['id'], user_id)
 

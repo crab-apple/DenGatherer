@@ -1,8 +1,10 @@
 """Built-in expose processor implementations. Used by the processor pipelines
    in flathunter and in the webservice"""
-import re
 import logging
+import re
+
 from flathunter.abstract_processor import Processor
+
 
 class Filter(Processor):
     """Filter processor implementation. Applies a filter to the list of exposes"""
@@ -13,6 +15,7 @@ class Filter(Processor):
 
     def process_exposes(self, exposes):
         return self.filter.filter(exposes)
+
 
 class AddressResolver(Processor):
     """Processor to extract apartment addresses from expose links"""
@@ -32,6 +35,7 @@ class AddressResolver(Processor):
                     break
         return expose
 
+
 class CrawlExposeDetails(Processor):
     """Processor to extract additional apartment details by parsing page at expose URL"""
 
@@ -44,6 +48,7 @@ class CrawlExposeDetails(Processor):
             if re.search(searcher.URL_PATTERN, expose['url']):
                 expose = searcher.get_expose_details(expose)
         return expose
+
 
 class LambdaProcessor(Processor):
     """Processor to apply arbitrary logic to each expose"""

@@ -1,8 +1,9 @@
 """Module with implementations of standard expose filters"""
-from functools import reduce
 import re
+from functools import reduce
 
 from flathunter.idmaintainer import AlreadySeenFilter
+
 
 class ExposeHelper:
     """Helper functions for extracting data from expose text"""
@@ -31,6 +32,7 @@ class ExposeHelper:
             return None
         return float(rooms_match[0].replace(",", "."))
 
+
 class MaxPriceFilter:
     """Exclude exposes above a given price"""
 
@@ -43,6 +45,7 @@ class MaxPriceFilter:
         if price is None:
             return True
         return price <= self.max_price
+
 
 class MinPriceFilter:
     """Exclude exposes below a given price"""
@@ -57,6 +60,7 @@ class MinPriceFilter:
             return True
         return price >= self.min_price
 
+
 class MaxSizeFilter:
     """Exclude exposes above a given size"""
 
@@ -69,6 +73,7 @@ class MaxSizeFilter:
         if size is None:
             return True
         return size <= self.max_size
+
 
 class MinSizeFilter:
     """Exclude exposes below a given size"""
@@ -83,6 +88,7 @@ class MinSizeFilter:
             return True
         return size >= self.min_size
 
+
 class MaxRoomsFilter:
     """Exclude exposes above a given number of rooms"""
 
@@ -96,6 +102,7 @@ class MaxRoomsFilter:
             return True
         return rooms <= self.max_rooms
 
+
 class MinRoomsFilter:
     """Exclude exposes below a given number of rooms"""
 
@@ -108,6 +115,7 @@ class MinRoomsFilter:
         if rooms is None:
             return True
         return rooms >= self.min_rooms
+
 
 class TitleFilter:
     """Exclude exposes whose titles match the provided terms"""
@@ -124,6 +132,7 @@ class TitleFilter:
             return True
         return False
 
+
 class PPSFilter:
     """Exclude exposes above a given price per square"""
 
@@ -139,6 +148,7 @@ class PPSFilter:
         pps = price / size
         return pps <= self.max_pps
 
+
 class PredicateFilter:
     """Include only those exposes satisfying the predicate"""
 
@@ -148,6 +158,7 @@ class PredicateFilter:
     def is_interesting(self, expose):
         """True if predicate is satisfied"""
         return self.predicate(expose)
+
 
 class FilterBuilder:
     """Construct a filter chain"""
@@ -197,6 +208,7 @@ class FilterBuilder:
     def build(self):
         """Return the compiled filter"""
         return Filter(self.filters)
+
 
 class Filter:
     """Abstract filter object"""

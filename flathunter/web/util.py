@@ -1,6 +1,7 @@
 """Utility functions for views"""
-import re
 import numbers
+import re
+
 
 def sanitize_float(float_string):
     """Turn a number string into a valid float"""

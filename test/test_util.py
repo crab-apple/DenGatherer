@@ -1,5 +1,6 @@
 import collections
 
+
 def count(iterable):
     if hasattr(iterable, '__len__'):
         return len(iterable)

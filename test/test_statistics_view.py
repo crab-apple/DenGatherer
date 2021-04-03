@@ -1,17 +1,12 @@
-import pytest
 import tempfile
-import yaml
-import json
-import requests_mock
 
-from flask import session
-
-from flathunter.web import app
-from flathunter.web_hunter import WebHunter
-from flathunter.idmaintainer import IdMaintainer
-from flathunter.config import Config
+import pytest
 
 from dummy_crawler import DummyCrawler
+from flathunter.config import Config
+from flathunter.idmaintainer import IdMaintainer
+from flathunter.web import app
+from flathunter.web_hunter import WebHunter
 
 DUMMY_CONFIG = """
 telegram:
@@ -22,6 +17,7 @@ message: "{title}"
 urls:
   - https://www.example.com/liste/berlin/wohnungen/mieten?roomi=2&prima=1500&wflmi=70&sort=createdate%2Bdesc
     """
+
 
 @pytest.fixture
 def hunt_client():
@@ -35,6 +31,7 @@ def hunt_client():
 
         with app.test_client() as hunt_client:
             yield hunt_client
+
 
 def test_statistics_view(hunt_client):
     rv = hunt_client.get('/stats')

@@ -1,18 +1,20 @@
 """Main module for Web Interface"""
 import collections
-import hmac
 import hashlib
+import hmac
 from urllib import parse
 
 from flask import render_template, jsonify, request, session, redirect
 from flask_api import status
 
+from flathunter.filter import FilterBuilder
 from flathunter.web import app, log
 from flathunter.web.util import sanitize_float
-from flathunter.filter import FilterBuilder
+
 
 class AuthenticationError(Exception):
     """Wrapper for authentication exceptions"""
+
 
 class User(dict):
     """Object to represent a user. Must be JSON Serializable for the session"""
@@ -23,6 +25,7 @@ class User(dict):
             if field not in parameters:
                 raise AuthenticationError("Missing field: " + field)
 
+
 def auth_hash(params, token):
     """Calculate the authentication hash for given params and secret token"""
     secret = hashlib.sha256()
@@ -31,10 +34,12 @@ def auth_hash(params, token):
     msg = "\n".join(["{}={}".format(k, v) for k, v in sorted_params.items()])
     return hmac.new(secret.digest(), msg.encode('utf-8'), digestmod=hashlib.sha256).hexdigest()
 
+
 def sign_hash(params, token):
     """Sign a parameter hash with authentication token"""
     params['hash'] = auth_hash(params, token)
     return params
+
 
 def user_for_params(params):
     """Load the user object corresponding to the supplied parameters"""
@@ -49,6 +54,7 @@ def user_for_params(params):
     log.warning("Unable to authenticate user: %s (exp: %s)", str(params), calculated_hash)
     return None
 
+
 def generate_dummy_login_url():
     """Generate a fake login URL for when we're working locally"""
     return '/login_with_telegram?' + parse.urlencode(sign_hash(
@@ -61,17 +67,20 @@ def generate_dummy_login_url():
             'auth_date': 123455678
         }, app.config['BOT_TOKEN']))
 
+
 def filter_values_for_user():
     """Load the filter settings for a specific user"""
     if 'user' not in session:
         return None
     return app.config["HUNTER"].get_filters_for_user(session['user']['id'])
 
+
 def filter_for_user():
     """Load the filter for the current user"""
     if filter_values_for_user() is None:
         return None
     return FilterBuilder().read_config({'filters': filter_values_for_user()}).build()
+
 
 def form_filter_values():
     """Extract the filter settings from the submitted form"""
@@ -82,11 +91,13 @@ def form_filter_values():
             values[field] = int(filters[field]) if field in filters else ""
     return values
 
+
 def notifications_muted_for_user():
     """True if the user has muted notifications"""
     if 'user' not in session:
         return None
     return app.config["HUNTER"].notifications_muted_for_user(session['user']['id'])
+
 
 @app.route('/index')
 @app.route('/')
@@ -104,15 +115,18 @@ def index():
                            filters=form_values,
                            notifications_enabled=(not notifications_muted_for_user()))
 
+
 @app.route('/about')
 def about():
     """Render the About page"""
     return render_template('about.html')
 
+
 @app.route('/resources')
 def resources():
     """Render the Resources page"""
     return render_template('resources.html')
+
 
 # Accept GET requests here to support Google Cloud Cron calls
 @app.route('/hunt', methods=['GET', 'POST'])
@@ -125,11 +139,13 @@ def hunt():
                    body=render_template("exposes.html", exposes=hunter.get_recent_exposes())), \
            status.HTTP_201_CREATED
 
+
 @app.route('/logout')
 def logout():
     """Logout current user"""
     session.pop('user')
     return redirect('/')
+
 
 @app.route('/login_with_telegram')
 def login_with_telegram():
@@ -144,6 +160,7 @@ def login_with_telegram():
         log.error('Invalid login attempt %s', str(request.args))
         return redirect('/')
 
+
 @app.route('/toggle_notifications', methods=['POST'])
 def toggle_notifications():
     """Toggle notifications for the logged-in user"""
@@ -154,13 +171,14 @@ def toggle_notifications():
     return jsonify(status="Updated",
                    notifications_enabled=notifications_enabled), status.HTTP_201_CREATED
 
+
 @app.route('/filter', methods=['POST'])
 def update_filter():
     """Update the filter for the logged-in user"""
     if 'user' not in session:
         return redirect('/')
     filters = {k: sanitize_float(v) for k, v in request.form.items() if v != "" \
-                                             and sanitize_float(v) is not None}
+               and sanitize_float(v) is not None}
     app.config["HUNTER"].set_filters_for_user(session['user']['id'], filters)
     log.info("Updated filter to: %s", str(filters))
     return redirect('/')

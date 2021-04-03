@@ -1,16 +1,18 @@
 """Wrap configuration options as an object"""
-import os
 import logging
+import os
+
 import yaml
 
 from flathunter.crawl_ebaykleinanzeigen import CrawlEbayKleinanzeigen
-from flathunter.crawl_immobilienscout import CrawlImmobilienscout
-from flathunter.crawl_wggesucht import CrawlWgGesucht
-from flathunter.crawl_immowelt import CrawlImmowelt
-from flathunter.crawler_subito import CrawlSubito
-from flathunter.crawl_immobiliare import CrawlImmobiliare
 from flathunter.crawl_idealista import CrawlIdealista
+from flathunter.crawl_immobiliare import CrawlImmobiliare
+from flathunter.crawl_immobilienscout import CrawlImmobilienscout
+from flathunter.crawl_immowelt import CrawlImmowelt
+from flathunter.crawl_wggesucht import CrawlWgGesucht
+from flathunter.crawler_subito import CrawlSubito
 from flathunter.filter import Filter
+
 
 class Config:
     """Class to represent flathunter configuration"""

@@ -6,6 +6,7 @@ from flathunter.config import Config
 from flathunter.filter import Filter
 from flathunter.processor import ProcessorChain
 
+
 class Hunter:
     """Hunter class - basic methods for crawling and processing / filtering exposes"""
     __log__ = logging.getLogger('flathunt')
@@ -25,17 +26,17 @@ class Hunter:
     def hunt_flats(self, max_pages=None):
         """Crawl, process and filter exposes"""
         filter_set = Filter.builder() \
-                           .read_config(self.config) \
-                           .filter_already_seen(self.id_watch) \
-                           .build()
+            .read_config(self.config) \
+            .filter_already_seen(self.id_watch) \
+            .build()
 
         processor_chain = ProcessorChain.builder(self.config) \
-                                        .save_all_exposes(self.id_watch) \
-                                        .apply_filter(filter_set) \
-                                        .resolve_addresses() \
-                                        .calculate_durations() \
-                                        .send_telegram_messages() \
-                                        .build()
+            .save_all_exposes(self.id_watch) \
+            .apply_filter(filter_set) \
+            .resolve_addresses() \
+            .calculate_durations() \
+            .send_telegram_messages() \
+            .build()
 
         result = []
         # We need to iterate over this list to force the evaluation of the pipeline

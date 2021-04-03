@@ -2,12 +2,13 @@
 from functools import reduce
 
 from flathunter.default_processors import AddressResolver
+from flathunter.default_processors import CrawlExposeDetails
 from flathunter.default_processors import Filter
 from flathunter.default_processors import LambdaProcessor
-from flathunter.default_processors import CrawlExposeDetails
-from flathunter.sender_telegram import SenderTelegram
 from flathunter.gmaps_duration_processor import GMapsDurationProcessor
 from flathunter.idmaintainer import SaveAllExposesProcessor
+from flathunter.sender_telegram import SenderTelegram
+
 
 class ProcessorChainBuilder:
     """Builder pattern for building chains of processors"""
@@ -57,6 +58,7 @@ class ProcessorChainBuilder:
     def build(self):
         """Build the processor chain"""
         return ProcessorChain(self.processors)
+
 
 class ProcessorChain:
     """Class to hold a chain of processors"""

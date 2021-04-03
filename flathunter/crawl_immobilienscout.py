@@ -1,12 +1,13 @@
 """Expose crawler for ImmobilienScout"""
+import datetime
 import logging
 import re
-import datetime
-import json
+
+from jsonpath_ng import parse
+from selenium.common.exceptions import JavascriptException
 
 from flathunter.abstract_crawler import Crawler
-from selenium.common.exceptions import JavascriptException
-from jsonpath_ng import jsonpath, parse
+
 
 class CrawlImmobilienscout(Crawler):
     """Implementation of Crawler interface for ImmobilienScout"""
@@ -99,14 +100,15 @@ class CrawlImmobilienscout(Crawler):
 
     def get_entries_from_json(self, json):
         jsonpath_expr = parse("$..['resultlist.realEstate']")
-        return [ self.extract_entry_from_javascript(entry.value) for entry in jsonpath_expr.find(json) ]
+        return [self.extract_entry_from_javascript(entry.value) for entry in jsonpath_expr.find(json)]
 
     def extract_entry_from_javascript(self, entry):
         image_path = parse("$..galleryAttachments..['@xlink.href']")
         return {
             'id': int(entry["@id"]),
             'url': ("https://www.immobilienscout24.de/expose/" + str(entry["@id"])),
-            'image': next(iter([ galleryImage.value for galleryImage in image_path.find(entry) ]), "https://www.static-immobilienscout24.de/statpic/placeholder_house/496c95154de31a357afa978cdb7f15f0_placeholder_medium.png"),
+            'image': next(iter([galleryImage.value for galleryImage in image_path.find(entry)]),
+                          "https://www.static-immobilienscout24.de/statpic/placeholder_house/496c95154de31a357afa978cdb7f15f0_placeholder_medium.png"),
             'title': entry["title"],
             'address': entry["address"]["description"]["text"],
             'crawler': self.get_name(),
@@ -117,7 +119,8 @@ class CrawlImmobilienscout(Crawler):
 
     def get_page(self, search_url, driver=None, page_no=None):
         """Applies a page number to a formatted search URL and fetches the exposes at that page"""
-        return self.get_soup_from_url(search_url.format(page_no), driver=driver, captcha_api_key=self.captcha_api_key, checkbox=self.checkbox, afterlogin_string=self.afterlogin_string)
+        return self.get_soup_from_url(search_url.format(page_no), driver=driver, captcha_api_key=self.captcha_api_key,
+                                      checkbox=self.checkbox, afterlogin_string=self.afterlogin_string)
 
     def get_expose_details(self, expose):
         """Loads additional details for an expose by processing the expose detail URL"""

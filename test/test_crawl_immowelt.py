@@ -1,8 +1,8 @@
 import pytest
 
+from flathunter.config import Config
 from flathunter.crawl_immowelt import CrawlImmowelt
 from test_util import count
-from flathunter.config import Config
 
 DUMMY_CONFIG = """
 urls:
@@ -10,6 +10,7 @@ urls:
     """
 
 TEST_URL = 'https://www.immowelt.de/liste/berlin/wohnungen/mieten?roomi=2&prima=1500&wflmi=70&sort=createdate%2Bdesc'
+
 
 @pytest.fixture
 def crawler():
@@ -24,12 +25,14 @@ def test_crawler(crawler):
     assert len(entries) > 0
     assert entries[0]['id'] > 0
     assert entries[0]['url'].startswith("https://www.immowelt.de/expose")
-    for attr in [ 'title', 'price', 'size', 'rooms', 'address', 'image' ]:
+    for attr in ['title', 'price', 'size', 'rooms', 'address', 'image']:
         assert entries[0][attr] is not None
+
 
 def test_dont_crawl_other_urls(crawler):
     exposes = crawler.crawl("https://www.example.com")
     assert count(exposes) == 0
+
 
 def test_process_expose_fetches_details(crawler):
     soup = crawler.get_page(TEST_URL)
@@ -37,8 +40,8 @@ def test_process_expose_fetches_details(crawler):
     entries = crawler.extract_data(soup)
     assert entries is not None
     assert len(entries) > 0
-    updated_entries = [ crawler.get_expose_details(expose) for expose in entries ]
+    updated_entries = [crawler.get_expose_details(expose) for expose in entries]
     for expose in updated_entries:
         print(expose)
-        for attr in [ 'title', 'price', 'size', 'rooms', 'address', 'from' ]:
+        for attr in ['title', 'price', 'size', 'rooms', 'address', 'from']:
             assert expose[attr] is not None

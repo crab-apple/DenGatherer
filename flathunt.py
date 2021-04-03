@@ -5,14 +5,14 @@
    console. To run as a webservice, look at main.py"""
 
 import argparse
-import os
 import logging
+import os
 import time
 from pprint import pformat
 
-from flathunter.idmaintainer import IdMaintainer
-from flathunter.hunter import Hunter
 from flathunter.config import Config
+from flathunter.hunter import Hunter
+from flathunter.idmaintainer import IdMaintainer
 
 __author__ = "Jan Harrie"
 __version__ = "1.0"
@@ -27,7 +27,7 @@ if os.name == 'posix':
     CBLUE = '\033[94m'
     COFF = '\033[0m'
     LOG_FORMAT = '[' + CBLUE + '%(asctime)s' + COFF + '|' + CBLUE + '%(filename)-18s' + COFF + \
-             '|' + CYELLOW + '%(levelname)-8s' + COFF + ']: %(message)s'
+                 '|' + CYELLOW + '%(levelname)-8s' + COFF + ']: %(message)s'
 else:
     # else without color
     LOG_FORMAT = '[%(asctime)s|%(filename)-18s|%(levelname)-8s]: %(message)s'
@@ -52,14 +52,14 @@ def launch_flat_hunt(config):
 
 def main():
     """Processes command-line arguments, loads the config, launches the flathunter"""
-    parser = argparse.ArgumentParser(description=\
-             "Searches for flats on Immobilienscout24.de and wg-gesucht.de and sends " + \
-             "results to Telegram User", epilog="Designed by Nody")
+    parser = argparse.ArgumentParser(description= \
+                                         "Searches for flats on Immobilienscout24.de and wg-gesucht.de and sends " + \
+                                         "results to Telegram User", epilog="Designed by Nody")
     parser.add_argument('--config', '-c',
                         type=argparse.FileType('r', encoding='UTF-8'),
                         default='%s/config.yaml' % os.path.dirname(os.path.abspath(__file__)),
                         help="Config file to use. If not set, try to use '%s/config.yaml' " %
-                        os.path.dirname(os.path.abspath(__file__))
+                             os.path.dirname(os.path.abspath(__file__))
                         )
     args = parser.parse_args()
 
@@ -84,6 +84,7 @@ def main():
 
     # start hunting for flats
     launch_flat_hunt(config)
+
 
 if __name__ == "__main__":
     main()

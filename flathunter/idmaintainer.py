@@ -1,9 +1,9 @@
 """SQLite implementation of IDMaintainer interface"""
-import threading
-import sqlite3 as lite
 import datetime
 import json
 import logging
+import sqlite3 as lite
+import threading
 
 from flathunter.abstract_processor import Processor
 
@@ -12,6 +12,7 @@ __version__ = "0.1"
 __maintainer__ = "Nody"
 __email__ = "harrymcfly@protonmail.com"
 __status__ = "Prodction"
+
 
 class SaveAllExposesProcessor(Processor):
     """Processor that saves all exposes to the database"""
@@ -25,6 +26,7 @@ class SaveAllExposesProcessor(Processor):
         self.id_watch.save_expose(expose)
         return expose
 
+
 class AlreadySeenFilter:
     """Filter exposes that have already been processed"""
 
@@ -37,6 +39,7 @@ class AlreadySeenFilter:
             self.id_watch.mark_processed(expose['id'])
             return True
         return False
+
 
 class IdMaintainer:
     """SQLite back-end for the database"""
@@ -92,10 +95,12 @@ class IdMaintainer:
 
     def get_exposes_since(self, min_datetime):
         """Loads all exposes since the specified date"""
+
         def row_to_expose(row):
             obj = json.loads(row[2])
             obj['created_at'] = row[0]
             return obj
+
         cur = self.get_connection().cursor()
         cur.execute('SELECT created, crawler, details FROM exposes \
                      WHERE created >= ? ORDER BY created DESC', (min_datetime,))

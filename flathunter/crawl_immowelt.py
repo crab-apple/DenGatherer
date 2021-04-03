@@ -1,9 +1,10 @@
 """Expose crawler for ImmoWelt"""
+import datetime
 import logging
 import re
-import datetime
 
 from flathunter.abstract_crawler import Crawler
+
 
 class CrawlImmowelt(Crawler):
     """Implementation of Crawler interface for ImmoWelt"""
@@ -29,10 +30,10 @@ class CrawlImmowelt(Crawler):
                     if description_element is None or description_element.find("p") is None:
                         continue
                     description = description_element.find("p").text
-                    if re.match(r'.*sofort.*', description, re.MULTILINE|re.DOTALL|re.IGNORECASE):
+                    if re.match(r'.*sofort.*', description, re.MULTILINE | re.DOTALL | re.IGNORECASE):
                         expose['from'] = datetime.datetime.now().strftime("%2d.%2m.%Y")
                     date_string = re.match(r'.*(\d{2}.\d{2}.\d{4}).*',
-                                           description, re.MULTILINE|re.DOTALL)
+                                           description, re.MULTILINE | re.DOTALL)
                     if date_string is not None:
                         expose['from'] = date_string[1]
             if 'from' not in expose:

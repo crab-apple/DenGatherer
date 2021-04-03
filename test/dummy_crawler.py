@@ -1,17 +1,17 @@
 import logging
 import re
-from random import seed
-from random import random
-from random import randint
 from random import choice
+from random import randint
+from random import seed
 
 from flathunter.abstract_crawler import Crawler
+
 
 class DummyCrawler(Crawler):
     __log__ = logging.getLogger('flathunt')
     URL_PATTERN = re.compile(r'https://www\.example\.com')
 
-    def __init__(self, titlewords=[ "wg", "tausch", "flat", "ruhig", "gruen" ], addresses_as_links=False):
+    def __init__(self, titlewords=["wg", "tausch", "flat", "ruhig", "gruen"], addresses_as_links=False):
         seed(1)
         self.titlewords = titlewords
         self.addresses_as_links = addresses_as_links

@@ -1,11 +1,13 @@
 """Functions and classes related to sending Telegram messages"""
-import urllib.request
-import urllib.parse
-import urllib.error
 import logging
+import urllib.error
+import urllib.parse
+import urllib.request
+
 import requests
 
 from flathunter.abstract_processor import Processor
+
 
 class SenderTelegram(Processor):
     """Expose processor that sends Telegram messages"""

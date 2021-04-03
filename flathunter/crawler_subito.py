@@ -1,7 +1,7 @@
 """Expose crawler for Subito"""
+import json
 import logging
 import re
-import json
 
 from flathunter.abstract_crawler import Crawler
 
@@ -76,4 +76,3 @@ class CrawlSubito(Crawler):
         self.__log__.debug('extracted: {}'.format(entries))
 
         return entries
-

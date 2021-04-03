@@ -21,8 +21,8 @@ class CrawlImmobiliare(Crawler):
         entries = list()
 
         findings = soup.find_all(lambda e: e.has_attr('data-id') \
-            and e.has_attr('class') \
-            and "listing-item" in e['class'])
+                                           and e.has_attr('class') \
+                                           and "listing-item" in e['class'])
 
         for row in findings:
             title_row = row.find('p', {"class": "titolo text-primary"})
@@ -69,4 +69,3 @@ class CrawlImmobiliare(Crawler):
         self.__log__.debug('extracted: {}'.format(entries))
 
         return entries
-

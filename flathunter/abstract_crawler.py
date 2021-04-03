@@ -1,19 +1,22 @@
 """Interface for webcrawlers. Crawler implementations should subclass this"""
-import re
 import logging
+import re
+from time import sleep as sleep
+
 import requests
 import selenium
-from time import sleep as sleep
-from selenium.webdriver.support import expected_conditions as EC
+from bs4 import BeautifulSoup
+from random_user_agent.params import HardwareType, Popularity
+from random_user_agent.user_agent import UserAgent
+from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
-from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
-from selenium import webdriver
-from bs4 import BeautifulSoup
-from random_user_agent.user_agent import UserAgent
-from random_user_agent.params import HardwareType, Popularity
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.wait import WebDriverWait
+
 from flathunter import proxies
+
 
 class Crawler:
     """Defines the Crawler interface"""

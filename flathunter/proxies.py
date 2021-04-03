@@ -2,6 +2,7 @@
 import requests
 from lxml.html import fromstring
 
+
 def get_proxies():
     """
     Gets random, free proxies

@@ -1,8 +1,10 @@
 """Expose crawler for Ebay Kleinanzeigen"""
+import datetime
 import logging
 import re
-import datetime
+
 from flathunter.abstract_crawler import Crawler
+
 
 class CrawlEbayKleinanzeigen(Crawler):
     """Implementation of Crawler interface for Ebay Kleinanzeigen"""
@@ -51,7 +53,7 @@ class CrawlEbayKleinanzeigen(Crawler):
         soup = soup.find(id="srchrslt-adtable")
         try:
             title_elements = soup.find_all(lambda e: e.has_attr('class')
-                                           and 'ellipsis' in e['class'])
+                                                     and 'ellipsis' in e['class'])
         except AttributeError:
             return entries
         expose_ids = soup.find_all("article", class_="aditem")

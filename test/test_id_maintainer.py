@@ -1,17 +1,17 @@
-import unittest
 import datetime
 import re
+import unittest
 
-from flathunter.idmaintainer import IdMaintainer
-from flathunter.config import Config
-from flathunter.hunter import Hunter
-from flathunter.web_hunter import WebHunter
-from flathunter.filter import Filter
 from dummy_crawler import DummyCrawler
+from flathunter.config import Config
+from flathunter.filter import Filter
+from flathunter.hunter import Hunter
+from flathunter.idmaintainer import IdMaintainer
+from flathunter.web_hunter import WebHunter
 from test_util import count
 
-class IdMaintainerTest(unittest.TestCase):
 
+class IdMaintainerTest(unittest.TestCase):
     TEST_URL = 'https://www.immowelt.de/liste/berlin/wohnungen/mieten?roomi=2&prima=1500&wflmi=70&sort=createdate%2Bdesc'
 
     DUMMY_CONFIG = """
@@ -42,6 +42,7 @@ filters:
         self.assertIsNotNone(time, "Expected time not to be none")
         self.assertEqual(time, self.maintainer.get_last_run_time(), "Expected last run time to be updated")
 
+
 def test_is_processed_works(mocker):
     config = Config(string=IdMaintainerTest.DUMMY_CONFIG)
     config.set_searchers([DummyCrawler()])
@@ -51,6 +52,7 @@ def test_is_processed_works(mocker):
     assert count(exposes) > 4
     for expose in exposes:
         assert id_watch.is_processed(expose['id'])
+
 
 def test_ids_are_added_to_maintainer(mocker):
     config = Config(string=IdMaintainerTest.DUMMY_CONFIG)
@@ -62,6 +64,7 @@ def test_ids_are_added_to_maintainer(mocker):
     assert count(exposes) > 4
     assert spy.call_count == 24
 
+
 def test_exposes_are_saved_to_maintainer():
     config = Config(string=IdMaintainerTest.CONFIG_WITH_FILTERS)
     config.set_searchers([DummyCrawler()])
@@ -72,6 +75,7 @@ def test_exposes_are_saved_to_maintainer():
     saved = id_watch.get_exposes_since(datetime.datetime.now() - datetime.timedelta(seconds=10))
     assert len(saved) > 0
     assert count(exposes) < len(saved)
+
 
 def test_exposes_are_returned_as_dictionaries():
     config = Config(string=IdMaintainerTest.CONFIG_WITH_FILTERS)
@@ -85,6 +89,7 @@ def test_exposes_are_returned_as_dictionaries():
     assert expose['title'] is not None
     assert expose['created_at'] is not None
 
+
 def test_exposes_are_returned_with_limit():
     config = Config(string=IdMaintainerTest.CONFIG_WITH_FILTERS)
     config.set_searchers([DummyCrawler()])
@@ -95,6 +100,7 @@ def test_exposes_are_returned_with_limit():
     assert len(saved) == 10
     expose = saved[0]
     assert expose['title'] is not None
+
 
 def test_exposes_are_returned_filtered():
     config = Config(string=IdMaintainerTest.CONFIG_WITH_FILTERS)
@@ -109,19 +115,21 @@ def test_exposes_are_returned_filtered():
     for expose in saved:
         assert int(re.match(r'\d+', expose['size'])[0]) <= 70
 
+
 def test_filters_for_user_are_saved():
     config = Config(string=IdMaintainerTest.CONFIG_WITH_FILTERS)
     id_watch = IdMaintainer(":memory:")
-    filter = { 'fish': 'cat' }
+    filter = {'fish': 'cat'}
     hunter = WebHunter(config, id_watch)
     hunter.set_filters_for_user(123, filter)
     assert hunter.get_filters_for_user(123) == filter
 
+
 def test_all_filters_can_be_loaded():
     config = Config(string=IdMaintainerTest.CONFIG_WITH_FILTERS)
     id_watch = IdMaintainer(":memory:")
-    filter = { 'fish': 'cat' }
+    filter = {'fish': 'cat'}
     hunter = WebHunter(config, id_watch)
     hunter.set_filters_for_user(123, filter)
     hunter.set_filters_for_user(124, filter)
-    assert id_watch.get_user_settings() == [ (123, { 'filters': filter }), (124, { 'filters': filter }) ]
+    assert id_watch.get_user_settings() == [(123, {'filters': filter}), (124, {'filters': filter})]

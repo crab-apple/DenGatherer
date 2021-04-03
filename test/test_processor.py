@@ -1,16 +1,14 @@
 import unittest
-import yaml
-import re
-from flathunter.crawl_immowelt import CrawlImmowelt
-from flathunter.hunter import Hunter
+
+from dummy_crawler import DummyCrawler
 from flathunter.config import Config
+from flathunter.hunter import Hunter
 from flathunter.idmaintainer import IdMaintainer
 from flathunter.processor import ProcessorChain
-from dummy_crawler import DummyCrawler
 from test_util import count
 
-class ProcessorTest(unittest.TestCase):
 
+class ProcessorTest(unittest.TestCase):
     DUMMY_CONFIG = """
 urls:
   - https://www.example.com/liste/berlin/wohnungen/mieten?roomi=2&prima=1500&wflmi=70&sort=createdate%2Bdesc

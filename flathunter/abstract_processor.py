@@ -1,5 +1,6 @@
 """Abstract class defining the 'Processor' interface"""
 
+
 class Processor:
     """Processor interface. Flathunter runs sequences of exposes through
        a set of processors that stack on each other"""

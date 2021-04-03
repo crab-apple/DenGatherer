@@ -1,15 +1,16 @@
-import unittest
-import yaml
 import re
+import unittest
+
 import requests_mock
-from flathunter.hunter import Hunter
-from flathunter.config import Config
-from flathunter.idmaintainer import IdMaintainer
+
 from dummy_crawler import DummyCrawler
+from flathunter.config import Config
+from flathunter.hunter import Hunter
+from flathunter.idmaintainer import IdMaintainer
 from test_util import count
 
-class GMapsDurationProcessorTest(unittest.TestCase):
 
+class GMapsDurationProcessorTest(unittest.TestCase):
     DUMMY_CONFIG = """
 urls:
   - https://www.example.com/liste/berlin/wohnungen/mieten?roomi=2&prima=1500&wflmi=70&sort=createdate%2Bdesc
@@ -40,7 +41,8 @@ durations:
         config.set_searchers([DummyCrawler()])
         hunter = Hunter(config, IdMaintainer(":memory:"))
         matcher = re.compile('maps.googleapis.com/maps/api/distancematrix/json')
-        m.get(matcher, text='{"status": "OK", "rows": [ { "elements": [ { "distance": { "text": "far", "value": 123 }, "duration": { "text": "days", "value": 123 } } ] } ]}')
+        m.get(matcher,
+              text='{"status": "OK", "rows": [ { "elements": [ { "distance": { "text": "far", "value": 123 }, "duration": { "text": "days", "value": 123 } } ] } ]}')
         exposes = hunter.hunt_flats()
         self.assertTrue(count(exposes) > 4, "Expected to find exposes")
         without_durations = list(filter(lambda expose: 'durations' not in expose, exposes))
