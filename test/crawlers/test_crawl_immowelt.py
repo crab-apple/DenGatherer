@@ -2,7 +2,9 @@ import pytest
 
 from flathunter.config import Config
 from flathunter.crawlers.crawl_immowelt import CrawlImmowelt
-from test_util import count
+from test.crawlers.crawler_test_helpers import common_entry_assertions, assert_common_attribute, \
+    common_expose_assertions
+from test.test_util import count
 
 DUMMY_CONFIG = """
 urls:
@@ -18,23 +20,15 @@ def crawler():
 
 
 def test_crawler(crawler):
-    soup = crawler.get_page(TEST_URL)
-    assert soup is not None
-    entries = crawler.extract_data(soup)
-    assert entries is not None
-    assert len(entries) > 0
-    assert entries[0]['id'] > 0
+    entries = get_entries(crawler)
+    common_entry_assertions(entries)
+
     assert entries[0]['url'].startswith("https://www.immowelt.de/expose")
-    for attr in ['title', 'price', 'size', 'rooms', 'address']:
-        assert entries[0][attr] is not None
 
     # We don't check that all listings have an image, as sometimes some don't.
     # However, let's check that at least one has an image to make sure that this part
     # isn't broken.
-    def has_image(entry):
-        return entry['image'] is not None
-
-    assert any(map(has_image, entries))
+    assert_common_attribute("image", entries)
 
 
 def test_dont_crawl_other_urls(crawler):
@@ -43,13 +37,12 @@ def test_dont_crawl_other_urls(crawler):
 
 
 def test_process_expose_fetches_details(crawler):
-    soup = crawler.get_page(TEST_URL)
-    assert soup is not None
-    entries = crawler.extract_data(soup)
-    assert entries is not None
-    assert len(entries) > 0
+    entries = get_entries(crawler)
     updated_entries = [crawler.get_expose_details(expose) for expose in entries]
-    for expose in updated_entries:
-        print(expose)
-        for attr in ['title', 'price', 'size', 'rooms', 'address', 'from']:
-            assert expose[attr] is not None
+    common_expose_assertions(updated_entries)
+
+
+def get_entries(crawler):
+    soup = crawler.get_page(TEST_URL)
+    entries = crawler.extract_data(soup)
+    return entries

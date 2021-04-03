@@ -1,8 +1,9 @@
 import unittest
-from functools import reduce
 
 from flathunter.config import Config
 from flathunter.crawlers.crawl_wggesucht import CrawlWgGesucht
+from test.crawlers.crawler_test_helpers import assert_required_attribute, assert_common_attribute, \
+    common_entry_assertions
 
 
 class WgGesuchtCrawlerTest(unittest.TestCase):
@@ -19,13 +20,10 @@ class WgGesuchtCrawlerTest(unittest.TestCase):
         soup = self.crawler.get_page(self.TEST_URL)
         self.assertIsNotNone(soup, "Should get a soup from the URL")
         entries = self.crawler.extract_data(soup)
-        self.assertIsNotNone(entries, "Should parse entries from search URL")
-        self.assertTrue(len(entries) > 0, "Should have at least one entry")
-        self.assertTrue(entries[0]['id'] > 0, "Id should be parsed")
+
+        common_entry_assertions(entries)
+        assert_required_attribute("from", entries)
+        assert_common_attribute("to", entries)
+
         self.assertTrue(entries[0]['url'].startswith("https://www.wg-gesucht.de/wohnungen"),
                         u"URL should be an apartment link")
-        for attr in ['title', 'price', 'size', 'rooms', 'address', 'image', 'from']:
-            self.assertIsNotNone(entries[0][attr], attr + " should be set")
-        for attr in ['to']:
-            found = reduce(lambda i, e: attr in e or i, entries, False)
-            self.assertTrue(found, "Expected " + attr + " to sometimes be set")

@@ -5,6 +5,7 @@ import pytest
 
 from flathunter.config import Config
 from flathunter.crawlers.crawl_immobilienscout import CrawlImmobilienscout
+from test.crawlers.crawler_test_helpers import common_entry_assertions, common_expose_assertions
 
 DUMMY_CONFIG = """
 urls:
@@ -28,24 +29,18 @@ def test_parse_exposes_from_json(crawler):
 
 
 def test_crawl_works(crawler):
-    soup = crawler.get_page(TEST_URL, page_no=1)
-    assert soup is not None
-    entries = crawler.extract_data(soup)
-    assert entries is not None
-    assert len(entries) > 0
-    assert entries[0]['id'] > 0
+    entries = get_entries(crawler)
+    common_entry_assertions(entries)
     assert entries[0]['url'].startswith("https://www.immobilienscout24.de/expose")
-    for attr in ['title', 'price', 'size', 'rooms', 'address']:
-        assert entries[0][attr] is not None
 
 
 def test_process_expose_fetches_details(crawler):
-    soup = crawler.get_page(TEST_URL, page_no=1)
-    assert soup is not None
-    entries = crawler.extract_data(soup)
-    assert entries is not None
-    assert len(entries) > 0
+    entries = get_entries(crawler)
     updated_entries = [crawler.get_expose_details(expose) for expose in entries]
-    for expose in updated_entries:
-        for attr in ['title', 'price', 'size', 'rooms', 'address', 'from']:
-            assert expose[attr] is not None
+    common_expose_assertions(updated_entries)
+
+
+def get_entries(crawler):
+    soup = crawler.get_page(TEST_URL, page_no=1)
+    entries = crawler.extract_data(soup)
+    return entries
