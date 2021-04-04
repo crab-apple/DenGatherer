@@ -1,12 +1,12 @@
 import re
 import unittest
 
-from dummy_crawler import DummyCrawler
 from flathunter.config import Config
 from flathunter.crawlers.crawl_immowelt import CrawlImmowelt
 from flathunter.hunter import Hunter
 from flathunter.idmaintainer import IdMaintainer
-from test_util import count
+from test.dummy_crawler import DummyCrawler
+from test.test_util import count
 
 
 class HunterTest(unittest.TestCase):
