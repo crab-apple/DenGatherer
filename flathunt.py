@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """Flathunter - search for flats by crawling property portals, and receive telegram
    messages about them. This is the main command-line executable, for running on the
-   console. To run as a webservice, look at main.py"""
+   console."""
 
 import argparse
 import logging

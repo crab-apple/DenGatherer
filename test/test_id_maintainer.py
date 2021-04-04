@@ -7,7 +7,6 @@ from flathunter.config import Config
 from flathunter.filter import Filter
 from flathunter.hunter import Hunter
 from flathunter.idmaintainer import IdMaintainer
-from flathunter.web_hunter import WebHunter
 from test_util import count
 
 
@@ -114,22 +113,3 @@ def test_exposes_are_returned_filtered():
     assert len(saved) == 10
     for expose in saved:
         assert int(re.match(r'\d+', expose['size'])[0]) <= 70
-
-
-def test_filters_for_user_are_saved():
-    config = Config(string=IdMaintainerTest.CONFIG_WITH_FILTERS)
-    id_watch = IdMaintainer(":memory:")
-    filter = {'fish': 'cat'}
-    hunter = WebHunter(config, id_watch)
-    hunter.set_filters_for_user(123, filter)
-    assert hunter.get_filters_for_user(123) == filter
-
-
-def test_all_filters_can_be_loaded():
-    config = Config(string=IdMaintainerTest.CONFIG_WITH_FILTERS)
-    id_watch = IdMaintainer(":memory:")
-    filter = {'fish': 'cat'}
-    hunter = WebHunter(config, id_watch)
-    hunter.set_filters_for_user(123, filter)
-    hunter.set_filters_for_user(124, filter)
-    assert id_watch.get_user_settings() == [(123, {'filters': filter}), (124, {'filters': filter})]

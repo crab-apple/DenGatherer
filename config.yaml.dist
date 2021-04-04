@@ -138,22 +138,6 @@ telegram:
     bot_token: 
     receiver_ids:
 
-# If you are running the web interface, you can configure Login with Telegram support
-# Follow the instructions here to register your domain with the Telegram bot:
-# https://core.telegram.org/widgets/login
-#
-# website:
-#    bot_name: bot_name_xxx
-#    domain: flathunter.example.com
-#    session_key: SomeSecretValue
-#    listen:
-#      host: 127.0.0.1
-#      port: 8080
-
-# If you are deploying to google cloud,
-# uncomment this and set it to your project id. More info in the readme.
-# google_cloud_project_id: my-flathunters-project-id
-
 # For websites like idealista.it, there are anti-crawler measures that can be
 # circumvented using proxies.
 # use_proxy_list: True
