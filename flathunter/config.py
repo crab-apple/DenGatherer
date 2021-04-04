@@ -22,12 +22,13 @@ class Config:
     def __init__(self, filename=None, string=None):
         if string is not None:
             self.config = yaml.safe_load(string)
-        else:
-            if filename is None:
-                filename = os.path.dirname(os.path.abspath(__file__)) + "/../config.yaml"
+        elif filename is not None:
             self.__log__.info("Using config %s", filename)
             with open(filename) as file:
                 self.config = yaml.safe_load(file)
+        else:
+            raise ValueError("Either filename or string must be given")
+
         self.__searchers__ = [CrawlImmobilienscout(self),
                               CrawlWgGesucht(self),
                               CrawlEbayKleinanzeigen(self),
