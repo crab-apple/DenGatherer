@@ -19,6 +19,7 @@ def crawler():
     return CrawlImmowelt(Config(string=DUMMY_CONFIG))
 
 
+@pytest.mark.crawler
 def test_crawler(crawler):
     entries = get_entries(crawler)
     common_entry_assertions(entries)
@@ -31,11 +32,13 @@ def test_crawler(crawler):
     assert_common_attribute("image", entries)
 
 
+@pytest.mark.crawler
 def test_dont_crawl_other_urls(crawler):
     exposes = crawler.crawl("https://www.example.com")
     assert count(exposes) == 0
 
 
+@pytest.mark.crawler
 def test_process_expose_fetches_details(crawler):
     entries = get_entries(crawler)
     updated_entries = [crawler.get_expose_details(expose) for expose in entries]

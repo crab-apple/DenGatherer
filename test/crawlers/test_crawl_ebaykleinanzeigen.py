@@ -17,12 +17,14 @@ def crawler():
     return CrawlEbayKleinanzeigen(Config(string=DUMMY_CONFIG))
 
 
+@pytest.mark.crawler
 def test_crawler(crawler):
     entries = get_entries(crawler)
     common_entry_assertions(entries)
     assert entries[0]['url'].startswith("https://www.ebay-kleinanzeigen.de/s-anzeige")
 
 
+@pytest.mark.crawler
 def test_process_expose_fetches_details(crawler):
     entries = get_entries(crawler)
     updated_entries = [crawler.get_expose_details(expose) for expose in entries]

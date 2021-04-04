@@ -20,6 +20,7 @@ def crawler():
     return CrawlImmobilienscout(Config(string=DUMMY_CONFIG))
 
 
+@pytest.mark.crawler
 def test_parse_exposes_from_json(crawler):
     with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), "../fixtures",
                            "immo-scout-IS24-object.json")) as fixture:
@@ -28,12 +29,14 @@ def test_parse_exposes_from_json(crawler):
     assert len(entries) > 0
 
 
+@pytest.mark.crawler
 def test_crawl_works(crawler):
     entries = get_entries(crawler)
     common_entry_assertions(entries)
     assert entries[0]['url'].startswith("https://www.immobilienscout24.de/expose")
 
 
+@pytest.mark.crawler
 def test_process_expose_fetches_details(crawler):
     entries = get_entries(crawler)
     updated_entries = [crawler.get_expose_details(expose) for expose in entries]
