@@ -7,6 +7,7 @@
 import argparse
 import logging
 import os
+import threading
 import time
 from pprint import pformat
 
@@ -21,6 +22,8 @@ __email__ = "harrymcfly@protonmail.com"
 __status__ = "Production"
 
 # init logging
+from flathunter.sender_telegram import SenderTelegram
+
 if os.name == 'posix':
     # coloring on linux
     CYELLOW = '\033[93m'
@@ -39,7 +42,13 @@ __log__ = logging.getLogger('flathunt')
 
 
 def launch_flat_hunt(config):
-    """Starts the crawler / notification loop"""
+    """Start the telegram notifier"""
+    telegram_sender = SenderTelegram(config)
+    thread = threading.Thread(name='daemon', target=telegram_sender.wait_and_process)
+    thread.setDaemon(True)
+    thread.start()
+
+    """Start the crawler loop"""
     id_watch = IdMaintainer('%s/processed_ids.db' % config.database_location())
 
     hunter = Hunter(config, id_watch)

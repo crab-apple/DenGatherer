@@ -12,6 +12,7 @@ pytest = "*"
 selenium = "*"
 random-user-agent = "*"
 jsonpath-ng = "*"
+redis = "*"
 
 [dev-packages]
 

@@ -1,17 +1,19 @@
 """Functions and classes related to sending Telegram messages"""
+import json
 import logging
 import urllib.error
 import urllib.parse
 import urllib.request
 
+import redis
 import requests
 
-from flathunter.abstract_processor import Processor
 
-
-class SenderTelegram(Processor):
+class SenderTelegram:
     """Expose processor that sends Telegram messages"""
     __log__ = logging.getLogger('flathunt')
+
+    exposes_channel = "exposes"
 
     def __init__(self, config, receivers=None):
         self.config = config
@@ -20,6 +22,16 @@ class SenderTelegram(Processor):
             self.receiver_ids = self.config.get('telegram', dict()).get('receiver_ids', list())
         else:
             self.receiver_ids = receivers
+
+    def wait_and_process(self):
+        r = redis.Redis()
+        pubsub = r.pubsub()
+        pubsub.subscribe(self.exposes_channel)
+        for new_message in pubsub.listen():
+            if new_message["type"] == "message" and new_message["channel"].decode("utf-8") == self.exposes_channel:
+                expose_json = new_message["data"].decode("utf-8")
+                expose = json.loads(expose_json)
+                self.process_expose(expose)
 
     def process_expose(self, expose):
         """Send a message to a user describing the expose"""
@@ -32,7 +44,6 @@ class SenderTelegram(Processor):
             address=expose['address'],
             durations="" if 'durations' not in expose else expose['durations']).strip()
         self.send_msg(message)
-        return expose
 
     def send_msg(self, message):
         """Send messages to each of the receivers in receiver_ids"""
