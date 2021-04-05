@@ -1,9 +1,9 @@
 version: "3"
 services:
   bot:
-    build: .
+    build: ./expose-finder
     volumes:
-      - .:/config
+      - ./expose-finder:/config
     depends_on:
       - redis
     command: [ "python3", "-u", "flathunt.py", "-c", "/config/config.yaml", "--redis_host", "redis"]

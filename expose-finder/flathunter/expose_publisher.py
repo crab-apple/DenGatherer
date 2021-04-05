@@ -2,7 +2,6 @@ import json
 import logging
 
 from flathunter.abstract_processor import Processor
-from flathunter.pubsub.redis_pubsub import RedisPubsub
 
 
 class ExposePublisher(Processor):
