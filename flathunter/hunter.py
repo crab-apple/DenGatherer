@@ -21,7 +21,7 @@ class Hunter:
         """Trigger a new crawl of the configured URLs"""
         return chain(*[searcher.crawl(url, max_pages)
                        for searcher in self.config.searchers()
-                       for url in self.config.get('urls', list())])
+                       for url in self.config.urls()])
 
     def hunt_flats(self, max_pages=None):
         """Crawl, process and filter exposes"""

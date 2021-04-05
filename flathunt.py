@@ -73,9 +73,8 @@ def main():
         return
     if not config.get('telegram', dict()).get('receiver_ids'):
         __log__.warning("No telegram receivers configured - nobody will get notifications.")
-    if not config.get('urls'):
-        __log__.error("No urls configured. Starting like this would be meaningless...")
-        return
+    if not config.urls():
+        __log__.warning("No urls configured. No crawling will be done.")
 
     # adjust log level, if required
     if config.get('verbose'):
