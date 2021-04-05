@@ -29,6 +29,7 @@ __email__ = "harrymcfly@protonmail.com"
 __status__ = "Production"
 
 # init logging
+from flathunter.pubsub.redis_pubsub import RedisPubsub
 from flathunter.sender_telegram import SenderTelegram
 
 if os.name == 'posix':
@@ -49,8 +50,11 @@ __log__ = logging.getLogger('flathunt')
 
 
 def launch_flat_hunt(config):
+
+    pubsub = RedisPubsub(config)
+
     """Start the telegram notifier"""
-    telegram_sender = SenderTelegram(config)
+    telegram_sender = SenderTelegram(config, pubsub)
     thread = threading.Thread(name='daemon', target=telegram_sender.wait_and_process)
     thread.setDaemon(True)
     thread.start()
@@ -58,7 +62,7 @@ def launch_flat_hunt(config):
     """Start the crawler loop"""
     id_watch = IdMaintainer('%s/processed_ids.db' % config.database_location())
 
-    hunter = Hunter(config, all_searchers(config), id_watch)
+    hunter = Hunter(config, all_searchers(config), id_watch, pubsub)
     hunter.hunt_flats()
 
     while config.get('loop', dict()).get('active', False):

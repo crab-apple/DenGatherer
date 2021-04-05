@@ -7,7 +7,7 @@ import urllib.request
 
 import requests
 
-from flathunter.pubsub.redis_pubsub import RedisPubsub
+from flathunter.pubsub.nop_pubsub import NopPubsub
 
 
 class SenderTelegram:
@@ -16,14 +16,11 @@ class SenderTelegram:
 
     exposes_channel = "exposes"
 
-    def __init__(self, config, receivers=None):
+    def __init__(self, config, pubsub=NopPubsub()):
         self.config = config
-        self.pubsub = RedisPubsub(config)
+        self.pubsub = pubsub
         self.bot_token = self.config.get('telegram', dict()).get('bot_token', '')
-        if receivers is None:
-            self.receiver_ids = self.config.get('telegram', dict()).get('receiver_ids', list())
-        else:
-            self.receiver_ids = receivers
+        self.receiver_ids = self.config.get('telegram', dict()).get('receiver_ids', list())
 
     def wait_and_process(self):
         for new_message in self.pubsub.listen(self.exposes_channel):

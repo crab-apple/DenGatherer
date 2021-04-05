@@ -17,8 +17,8 @@ class ProcessorChainBuilder:
         self.processors = []
         self.config = config
 
-    def publish_exposes(self):
-        self.processors.append(ExposePublisher(self.config))
+    def publish_exposes(self, pubsub):
+        self.processors.append(ExposePublisher(pubsub))
         return self
 
     def resolve_addresses(self, searchers):

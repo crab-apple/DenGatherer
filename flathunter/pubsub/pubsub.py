@@ -3,7 +3,7 @@
 
 class Pubsub:
     def publish(self, channel, string):
-        pass
+        raise NotImplementedError()
 
     def listen(self, channel):
-        pass
+        raise NotImplementedError()
