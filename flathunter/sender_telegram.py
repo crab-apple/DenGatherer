@@ -24,7 +24,7 @@ class SenderTelegram:
             self.receiver_ids = receivers
 
     def wait_and_process(self):
-        r = redis.Redis()
+        r = redis.Redis(self.config.redis_host(), self.config.redis_port())
         pubsub = r.pubsub()
         pubsub.subscribe(self.exposes_channel)
         for new_message in pubsub.listen():

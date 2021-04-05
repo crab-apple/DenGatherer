@@ -74,3 +74,9 @@ class Config:
 
     def use_proxy(self):
         return ("use_proxy_list" in self.config and self.config["use_proxy_list"])
+
+    def redis_host(self):
+        return self.config["redis"]["host"]
+
+    def redis_port(self):
+        return self.config["redis"]["port"]

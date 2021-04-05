@@ -14,6 +14,6 @@ class ExposePublisher(Processor):
         self.config = config
 
     def process_expose(self, expose):
-        r = redis.Redis()
+        r = redis.Redis(self.config.redis_host(), self.config.redis_port())
         r.publish("exposes", json.dumps(expose))
         return expose

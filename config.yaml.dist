@@ -15,6 +15,11 @@ loop:
 # Defaults to the current directory
 #database_location: /path/to/database
 
+# Location of the Redis pub-sub service
+redis:
+    host: localhost
+    port: 6379
+
 # List the URLs containing your filter properties below.
 # Currently supported services: www.immobilienscout24.de,
 # www.immowelt.de, www.wg-gesucht.de, and www.ebay-kleinanzeigen.de.
