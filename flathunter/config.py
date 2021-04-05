@@ -4,13 +4,6 @@ import os
 
 import yaml
 
-from flathunter.crawlers.crawl_ebaykleinanzeigen import CrawlEbayKleinanzeigen
-from flathunter.crawlers.crawl_idealista import CrawlIdealista
-from flathunter.crawlers.crawl_immobiliare import CrawlImmobiliare
-from flathunter.crawlers.crawl_immobilienscout import CrawlImmobilienscout
-from flathunter.crawlers.crawl_immowelt import CrawlImmowelt
-from flathunter.crawlers.crawl_wggesucht import CrawlWgGesucht
-from flathunter.crawlers.crawler_subito import CrawlSubito
 from flathunter.filter import Filter
 
 
@@ -28,14 +21,6 @@ class Config:
                 self.config = yaml.safe_load(file)
         else:
             raise ValueError("Either filename or string must be given")
-
-        self.__searchers__ = [CrawlImmobilienscout(self),
-                              CrawlWgGesucht(self),
-                              CrawlEbayKleinanzeigen(self),
-                              CrawlImmowelt(self),
-                              CrawlSubito(self),
-                              CrawlImmobiliare(self),
-                              CrawlIdealista(self)]
 
     def __iter__(self):
         """Emulate dictionary"""
@@ -57,14 +42,6 @@ class Config:
         if "database_location" in self.config:
             return self.config["database_location"]
         return os.path.abspath(os.path.dirname(os.path.abspath(__file__)) + "/..")
-
-    def set_searchers(self, searchers):
-        """Update the active search plugins"""
-        self.__searchers__ = searchers
-
-    def searchers(self):
-        """Get the list of search plugins"""
-        return self.__searchers__
 
     def get_filter(self):
         """Read the configured filter"""
