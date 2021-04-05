@@ -38,8 +38,7 @@ durations:
     @requests_mock.Mocker()
     def test_resolve_durations(self, m):
         config = Config(string=self.DUMMY_CONFIG)
-        config.set_searchers([DummyCrawler()])
-        hunter = Hunter(config, IdMaintainer(":memory:"))
+        hunter = Hunter(config, [DummyCrawler()], IdMaintainer(":memory:"))
         matcher = re.compile('maps.googleapis.com/maps/api/distancematrix/json')
         m.get(matcher,
               text='{"status": "OK", "rows": [ { "elements": [ { "distance": { "text": "far", "value": 123 }, "duration": { "text": "days", "value": 123 } } ] } ]}')

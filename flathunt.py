@@ -11,6 +11,13 @@ import time
 from pprint import pformat
 
 from flathunter.config import Config
+from flathunter.crawlers.crawl_ebaykleinanzeigen import CrawlEbayKleinanzeigen
+from flathunter.crawlers.crawl_idealista import CrawlIdealista
+from flathunter.crawlers.crawl_immobiliare import CrawlImmobiliare
+from flathunter.crawlers.crawl_immobilienscout import CrawlImmobilienscout
+from flathunter.crawlers.crawl_immowelt import CrawlImmowelt
+from flathunter.crawlers.crawl_wggesucht import CrawlWgGesucht
+from flathunter.crawlers.crawler_subito import CrawlSubito
 from flathunter.hunter import Hunter
 from flathunter.idmaintainer import IdMaintainer
 
@@ -42,12 +49,22 @@ def launch_flat_hunt(config):
     """Starts the crawler / notification loop"""
     id_watch = IdMaintainer('%s/processed_ids.db' % config.database_location())
 
-    hunter = Hunter(config, id_watch)
+    hunter = Hunter(config, all_searchers(config), id_watch)
     hunter.hunt_flats()
 
     while config.get('loop', dict()).get('active', False):
         time.sleep(config.get('loop', dict()).get('sleeping_time', 60 * 10))
         hunter.hunt_flats()
+
+
+def all_searchers(config):
+    return [CrawlImmobilienscout(config),
+            CrawlWgGesucht(config),
+            CrawlEbayKleinanzeigen(config),
+            CrawlImmowelt(config),
+            CrawlSubito(config),
+            CrawlImmobiliare(config),
+            CrawlIdealista(config)]
 
 
 def main():

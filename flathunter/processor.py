@@ -22,9 +22,9 @@ class ProcessorChainBuilder:
         self.processors.append(SenderTelegram(self.config, receivers=receivers))
         return self
 
-    def resolve_addresses(self):
+    def resolve_addresses(self, searchers):
         """Add processsor that resolves addresses from expose pages"""
-        self.processors.append(AddressResolver(self.config))
+        self.processors.append(AddressResolver(searchers))
         return self
 
     def calculate_durations(self):
@@ -35,9 +35,9 @@ class ProcessorChainBuilder:
             self.processors.append(GMapsDurationProcessor(self.config))
         return self
 
-    def crawl_expose_details(self):
+    def crawl_expose_details(self, searchers):
         """Add processor to crawl expose details"""
-        self.processors.append(CrawlExposeDetails(self.config))
+        self.processors.append(CrawlExposeDetails(searchers))
         return self
 
     def map(self, func):
