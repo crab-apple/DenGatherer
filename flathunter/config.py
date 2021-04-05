@@ -1,4 +1,5 @@
 """Wrap configuration options as an object"""
+import argparse
 import logging
 import os
 
@@ -56,7 +57,14 @@ class Config:
         return ("use_proxy_list" in self.config and self.config["use_proxy_list"])
 
     def redis_host(self):
-        return self.config["redis"]["host"]
+        return command_line_arg("redis_host") or self.config["redis"]["host"]
 
     def redis_port(self):
-        return self.config["redis"]["port"]
+        return command_line_arg("redis_port") or self.config["redis"]["port"]
+
+
+def command_line_arg(argument):
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--" + argument)
+    print(parser.parse_known_args()[0])
+    return getattr(parser.parse_known_args()[0], argument)

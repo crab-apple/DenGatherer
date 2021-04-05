@@ -91,7 +91,7 @@ def main():
                         help="Config file to use. If not set, try to use '%s/config.yaml' " %
                              os.path.dirname(os.path.abspath(__file__))
                         )
-    args = parser.parse_args()
+    args = parser.parse_known_args()[0]
 
     # load config
     config_handle = args.config
