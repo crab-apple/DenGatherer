@@ -5,8 +5,9 @@ import urllib.error
 import urllib.parse
 import urllib.request
 
-import redis
 import requests
+
+from flathunter.pubsub.redis_pubsub import RedisPubsub
 
 
 class SenderTelegram:
@@ -17,6 +18,7 @@ class SenderTelegram:
 
     def __init__(self, config, receivers=None):
         self.config = config
+        self.pubsub = RedisPubsub(config)
         self.bot_token = self.config.get('telegram', dict()).get('bot_token', '')
         if receivers is None:
             self.receiver_ids = self.config.get('telegram', dict()).get('receiver_ids', list())
@@ -24,14 +26,9 @@ class SenderTelegram:
             self.receiver_ids = receivers
 
     def wait_and_process(self):
-        r = redis.Redis(self.config.redis_host(), self.config.redis_port())
-        pubsub = r.pubsub()
-        pubsub.subscribe(self.exposes_channel)
-        for new_message in pubsub.listen():
-            if new_message["type"] == "message" and new_message["channel"].decode("utf-8") == self.exposes_channel:
-                expose_json = new_message["data"].decode("utf-8")
-                expose = json.loads(expose_json)
-                self.process_expose(expose)
+        for new_message in self.pubsub.listen(self.exposes_channel):
+            expose = json.loads(new_message)
+            self.process_expose(expose)
 
     def process_expose(self, expose):
         """Send a message to a user describing the expose"""
