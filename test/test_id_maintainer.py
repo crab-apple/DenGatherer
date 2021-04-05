@@ -44,9 +44,8 @@ filters:
 
 def test_is_processed_works(mocker):
     config = Config(string=IdMaintainerTest.DUMMY_CONFIG)
-    config.set_searchers([DummyCrawler()])
     id_watch = IdMaintainer(":memory:")
-    hunter = Hunter(config, id_watch)
+    hunter = Hunter(config, [DummyCrawler()], id_watch)
     exposes = hunter.hunt_flats()
     assert count(exposes) > 4
     for expose in exposes:
@@ -55,10 +54,9 @@ def test_is_processed_works(mocker):
 
 def test_ids_are_added_to_maintainer(mocker):
     config = Config(string=IdMaintainerTest.DUMMY_CONFIG)
-    config.set_searchers([DummyCrawler()])
     id_watch = IdMaintainer(":memory:")
     spy = mocker.spy(id_watch, "mark_processed")
-    hunter = Hunter(config, id_watch)
+    hunter = Hunter(config, [DummyCrawler()], id_watch)
     exposes = hunter.hunt_flats()
     assert count(exposes) > 4
     assert spy.call_count == 24
@@ -66,9 +64,8 @@ def test_ids_are_added_to_maintainer(mocker):
 
 def test_exposes_are_saved_to_maintainer():
     config = Config(string=IdMaintainerTest.CONFIG_WITH_FILTERS)
-    config.set_searchers([DummyCrawler()])
     id_watch = IdMaintainer(":memory:")
-    hunter = Hunter(config, id_watch)
+    hunter = Hunter(config, [DummyCrawler()], id_watch)
     exposes = hunter.hunt_flats()
     assert count(exposes) > 4
     saved = id_watch.get_exposes_since(datetime.datetime.now() - datetime.timedelta(seconds=10))
@@ -78,9 +75,8 @@ def test_exposes_are_saved_to_maintainer():
 
 def test_exposes_are_returned_as_dictionaries():
     config = Config(string=IdMaintainerTest.CONFIG_WITH_FILTERS)
-    config.set_searchers([DummyCrawler()])
     id_watch = IdMaintainer(":memory:")
-    hunter = Hunter(config, id_watch)
+    hunter = Hunter(config, [DummyCrawler()], id_watch)
     hunter.hunt_flats()
     saved = id_watch.get_exposes_since(datetime.datetime.now() - datetime.timedelta(seconds=10))
     assert len(saved) > 0
@@ -91,9 +87,8 @@ def test_exposes_are_returned_as_dictionaries():
 
 def test_exposes_are_returned_with_limit():
     config = Config(string=IdMaintainerTest.CONFIG_WITH_FILTERS)
-    config.set_searchers([DummyCrawler()])
     id_watch = IdMaintainer(":memory:")
-    hunter = Hunter(config, id_watch)
+    hunter = Hunter(config, [DummyCrawler()], id_watch)
     hunter.hunt_flats()
     saved = id_watch.get_recent_exposes(10)
     assert len(saved) == 10
@@ -103,9 +98,8 @@ def test_exposes_are_returned_with_limit():
 
 def test_exposes_are_returned_filtered():
     config = Config(string=IdMaintainerTest.CONFIG_WITH_FILTERS)
-    config.set_searchers([DummyCrawler()])
     id_watch = IdMaintainer(":memory:")
-    hunter = Hunter(config, id_watch)
+    hunter = Hunter(config, [DummyCrawler()], id_watch)
     hunter.hunt_flats()
     hunter.hunt_flats()
     filter = Filter.builder().max_size_filter(70).build()

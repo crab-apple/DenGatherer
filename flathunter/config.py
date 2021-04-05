@@ -49,6 +49,9 @@ class Config:
         """Emulate dictionary"""
         return self.config.get(key, value)
 
+    def urls(self):
+        return self.config["urls"] or list()
+
     def database_location(self):
         """Return the location of the database folder"""
         if "database_location" in self.config:

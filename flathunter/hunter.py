@@ -11,8 +11,9 @@ class Hunter:
     """Hunter class - basic methods for crawling and processing / filtering exposes"""
     __log__ = logging.getLogger('flathunt')
 
-    def __init__(self, config, id_watch):
+    def __init__(self, config, searchers, id_watch):
         self.config = config
+        self.searchers = searchers
         if not isinstance(self.config, Config):
             raise Exception("Invalid config for hunter - should be a 'Config' object")
         self.id_watch = id_watch
@@ -20,8 +21,8 @@ class Hunter:
     def crawl_for_exposes(self, max_pages=None):
         """Trigger a new crawl of the configured URLs"""
         return chain(*[searcher.crawl(url, max_pages)
-                       for searcher in self.config.searchers()
-                       for url in self.config.get('urls', list())])
+                       for searcher in self.searchers
+                       for url in self.config.urls()])
 
     def hunt_flats(self, max_pages=None):
         """Crawl, process and filter exposes"""
@@ -33,7 +34,7 @@ class Hunter:
         processor_chain = ProcessorChain.builder(self.config) \
             .save_all_exposes(self.id_watch) \
             .apply_filter(filter_set) \
-            .resolve_addresses() \
+            .resolve_addresses(self.searchers) \
             .calculate_durations() \
             .publish_exposes() \
             .build()
