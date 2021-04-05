@@ -7,8 +7,6 @@
 import argparse
 import logging
 import os
-import threading
-import time
 from pprint import pformat
 
 from flathunter.config import Config
@@ -19,8 +17,6 @@ from flathunter.crawlers.crawl_immobilienscout import CrawlImmobilienscout
 from flathunter.crawlers.crawl_immowelt import CrawlImmowelt
 from flathunter.crawlers.crawl_wggesucht import CrawlWgGesucht
 from flathunter.crawlers.crawler_subito import CrawlSubito
-from flathunter.hunter import Hunter
-from flathunter.idmaintainer import IdMaintainer
 
 __author__ = "Jan Harrie"
 __version__ = "1.0"
@@ -50,16 +46,9 @@ __log__ = logging.getLogger('flathunt')
 
 
 def launch_flat_hunt(config):
-
-    """Start the crawler loop"""
-    id_watch = IdMaintainer('%s/processed_ids.db' % config.database_location())
-
-    hunter = Hunter(config, all_searchers(config), id_watch, RedisPubsub(config))
-    hunter.hunt_flats()
-
-    while config.get('loop', dict()).get('active', False):
-        time.sleep(config.get('loop', dict()).get('sleeping_time', 60 * 10))
-        hunter.hunt_flats()
+    """Start the telegram notifier"""
+    telegram_sender = SenderTelegram(config, RedisPubsub(config))
+    telegram_sender.wait_and_process()
 
 
 def all_searchers(config):
