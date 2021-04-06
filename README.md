@@ -1,3 +1,5 @@
-Flathunter (https://github.com/flathunters/flathunter) is a Telegram bot that scrapes flat listing websites and sends notifications to telegram when a flat comes up that matches the required criteria.
+# DenGatherer
 
-This is an attempt at decoupling the two parts of it (the part about finding flats, and the part about sending messages to telegram) and ideally provide a way to integrate the first part with other systems, possibly written in other languages. For example, one could send the flats to another service which maintains a database, on top of which other filtering or notification functionality can be built.
+This project is mostly based on [Flathunter](https://github.com/flathunters/flathunter) (a bot that scrapes flat listing websites and sends notifications to telegram) and has the aim of expanding Flathunter's functionality in ways that may be a bit too drastic for it to be just a fork.
+
+Right now the main goal is to decouple the scraping/info-gathering part of the project from the notifying part of it (the integration with telegram). Communication between them will happen through a pub/sub service (Redis). This will then allow to easily implement other consumers of the flat offerings data, possibly written in other languages.
