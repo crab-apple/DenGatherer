@@ -10,13 +10,6 @@ import os
 from pprint import pformat
 
 from flathunter.config import Config
-from flathunter.crawlers.crawl_ebaykleinanzeigen import CrawlEbayKleinanzeigen
-from flathunter.crawlers.crawl_idealista import CrawlIdealista
-from flathunter.crawlers.crawl_immobiliare import CrawlImmobiliare
-from flathunter.crawlers.crawl_immobilienscout import CrawlImmobilienscout
-from flathunter.crawlers.crawl_immowelt import CrawlImmowelt
-from flathunter.crawlers.crawl_wggesucht import CrawlWgGesucht
-from flathunter.crawlers.crawler_subito import CrawlSubito
 
 __author__ = "Jan Harrie"
 __version__ = "1.0"
@@ -45,22 +38,6 @@ logging.basicConfig(
 __log__ = logging.getLogger('flathunt')
 
 
-def launch_flat_hunt(config):
-    """Start the telegram notifier"""
-    telegram_sender = SenderTelegram(config, RedisPubsub(config))
-    telegram_sender.wait_and_process()
-
-
-def all_searchers(config):
-    return [CrawlImmobilienscout(config),
-            CrawlWgGesucht(config),
-            CrawlEbayKleinanzeigen(config),
-            CrawlImmowelt(config),
-            CrawlSubito(config),
-            CrawlImmobiliare(config),
-            CrawlIdealista(config)]
-
-
 def main():
     """Processes command-line arguments, loads the config, launches the flathunter"""
     parser = argparse.ArgumentParser(description= \
@@ -84,16 +61,15 @@ def main():
         return
     if not config.get('telegram', dict()).get('receiver_ids'):
         __log__.warning("No telegram receivers configured - nobody will get notifications.")
-    if not config.urls():
-        __log__.warning("No urls configured. No crawling will be done.")
 
     # adjust log level, if required
     if config.get('verbose'):
         __log__.setLevel(logging.DEBUG)
         __log__.debug("Settings from config: %s", pformat(config))
 
-    # start hunting for flats
-    launch_flat_hunt(config)
+    # start sending messages
+    telegram_sender = SenderTelegram(config, RedisPubsub(config))
+    telegram_sender.wait_and_process()
 
 
 if __name__ == "__main__":

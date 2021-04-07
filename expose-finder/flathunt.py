@@ -7,7 +7,6 @@
 import argparse
 import logging
 import os
-import threading
 import time
 from pprint import pformat
 
@@ -30,7 +29,6 @@ __status__ = "Production"
 
 # init logging
 from flathunter.pubsub.redis_pubsub import RedisPubsub
-from flathunter.sender_telegram import SenderTelegram
 
 if os.name == 'posix':
     # coloring on linux
@@ -90,11 +88,6 @@ def main():
     config = Config(config_handle.name)
 
     # check config
-    if not config.get('telegram', dict()).get('bot_token'):
-        __log__.error("No telegram bot token configured. Starting like this would be pointless...")
-        return
-    if not config.get('telegram', dict()).get('receiver_ids'):
-        __log__.warning("No telegram receivers configured - nobody will get notifications.")
     if not config.urls():
         __log__.warning("No urls configured. No crawling will be done.")
 

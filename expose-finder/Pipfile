@@ -7,12 +7,14 @@ name = "pypi"
 beautifulsoup4 = "==4.8.1"
 PyYAML = "==5.4"
 requests = "==2.22.0"
+requests-mock = "==1.8.0"
 lxml = "==4.6.3"
 pytest = "*"
 selenium = "*"
 random-user-agent = "*"
 jsonpath-ng = "*"
 redis = "*"
+pytest-mock = "*"
 
 [dev-packages]
 

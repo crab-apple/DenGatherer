@@ -89,25 +89,7 @@ durations:
           - gm_id: driving
             title: "Auto"
 
-# Multiline message (yes, the | is supposed to be there), 
-# to format the message received from the Telegram bot. 
-# 
-# Available placeholders:
-# 	- {title}: The title of the expose
-#	- {rooms}: Number of rooms
-#	- {price}: Price for the flat
-# 	- {durations}: Durations calculated by GMaps, see above
-#	- {url}: URL to the expose
-message: |
-    {title}
-    Zimmer: {rooms}
-    Größe: {size}
-    Preis: {price}
-    Ort: {address}
-
-    {url}
-
-# Calculating durations requires access to the Google Maps API. 
+# Calculating durations requires access to the Google Maps API.
 # Below you can configure the URL to access the API, with placeholders.
 # The URL should most probably just kept like that. 
 # To use the Google Maps API, an API key is required. You can obtain one
@@ -126,22 +108,6 @@ captcha:
   driver_path: YOUR_CHROME_DRIVER_PATH
   driver_arguments:
     - "--headless"
-
-# Sending messages using Telegram requires a Telegram Bot configured. 
-# Telegram.org offers a good documentation about how to create a bot.
-# Once you read it, will make sense. Still: bot_token should hold the
-# access token of your bot and receiver_ids should list the client ids
-# of receivers. Note that those receivers are required to already have
-# started a conversation with your bot. 
-#
-# telegram:
-#   bot_token: 160165XXXXXXX....
-#   receiver_ids:
-#       - 12345....
-#       - 67890....
-telegram:
-    bot_token: 
-    receiver_ids:
 
 # For websites like idealista.it, there are anti-crawler measures that can be
 # circumvented using proxies.

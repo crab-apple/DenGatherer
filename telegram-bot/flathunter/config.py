@@ -1,11 +1,8 @@
 """Wrap configuration options as an object"""
 import argparse
 import logging
-import os
 
 import yaml
-
-from flathunter.filter import Filter
 
 
 class Config:
@@ -34,27 +31,6 @@ class Config:
     def get(self, key, value=None):
         """Emulate dictionary"""
         return self.config.get(key, value)
-
-    def urls(self):
-        return self.config["urls"] or list()
-
-    def database_location(self):
-        """Return the location of the database folder"""
-        if "database_location" in self.config:
-            return self.config["database_location"]
-        return os.path.abspath(os.path.dirname(os.path.abspath(__file__)) + "/..")
-
-    def get_filter(self):
-        """Read the configured filter"""
-        builder = Filter.builder()
-        builder.read_config(self.config)
-        return builder.build()
-
-    def captcha_enabled(self):
-        return ("captcha" in self.config)
-
-    def use_proxy(self):
-        return ("use_proxy_list" in self.config and self.config["use_proxy_list"])
 
     def redis_host(self):
         return command_line_arg("redis_host") or self.config["redis"]["host"]
