@@ -7,3 +7,6 @@ random-user-agent==1.0.1
 requests==2.22.0
 requests-mock==1.8.0
 selenium==3.141.0
+setuptools~=44.0.0
+bs4~=0.0.1
+redis~=3.5.3

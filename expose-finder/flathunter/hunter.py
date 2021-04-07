@@ -5,18 +5,20 @@ from itertools import chain
 from flathunter.config import Config
 from flathunter.filter import Filter
 from flathunter.processor import ProcessorChain
+from flathunter.pubsub.nop_pubsub import NopPubsub
 
 
 class Hunter:
     """Hunter class - basic methods for crawling and processing / filtering exposes"""
     __log__ = logging.getLogger('flathunt')
 
-    def __init__(self, config, searchers, id_watch):
+    def __init__(self, config, searchers, id_watch, pubsub=NopPubsub()):
         self.config = config
         self.searchers = searchers
         if not isinstance(self.config, Config):
             raise Exception("Invalid config for hunter - should be a 'Config' object")
         self.id_watch = id_watch
+        self.pubsub = pubsub
 
     def crawl_for_exposes(self, max_pages=None):
         """Trigger a new crawl of the configured URLs"""
@@ -36,7 +38,7 @@ class Hunter:
             .apply_filter(filter_set) \
             .resolve_addresses(self.searchers) \
             .calculate_durations() \
-            .send_telegram_messages() \
+            .publish_exposes(self.pubsub) \
             .build()
 
         result = []

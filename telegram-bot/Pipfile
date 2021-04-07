@@ -1,0 +1,19 @@
+[[source]]
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+jsonpath-ng = "==1.5.2"
+lxml = "==4.6.2"
+pytest = "==6.2.2"
+PyYAML = "==5.1.2"
+random-user-agent = "==1.0.1"
+requests = "==2.22.0"
+requests-mock = "==1.8.0"
+redis = "~=3.5.3"
+
+[dev-packages]
+
+[requires]
+python_version = "3.8"

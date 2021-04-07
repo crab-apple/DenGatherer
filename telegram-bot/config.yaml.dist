@@ -1,0 +1,42 @@
+---
+# Enable verbose mode (print DEBUG log messages)
+# verbose: true
+
+# Location of the Redis pub-sub service
+redis:
+    host: localhost
+    port: 6379
+
+# Multiline message (yes, the | is supposed to be there),
+# to format the message received from the Telegram bot. 
+# 
+# Available placeholders:
+# 	- {title}: The title of the expose
+#	- {rooms}: Number of rooms
+#	- {price}: Price for the flat
+# 	- {durations}: Durations calculated by GMaps, see above
+#	- {url}: URL to the expose
+message: |
+    {title}
+    Zimmer: {rooms}
+    Größe: {size}
+    Preis: {price}
+    Ort: {address}
+
+    {url}
+
+# Sending messages using Telegram requires a Telegram Bot configured. 
+# Telegram.org offers a good documentation about how to create a bot.
+# Once you read it, will make sense. Still: bot_token should hold the
+# access token of your bot and receiver_ids should list the client ids
+# of receivers. Note that those receivers are required to already have
+# started a conversation with your bot. 
+#
+# telegram:
+#   bot_token: 160165XXXXXXX....
+#   receiver_ids:
+#       - 12345....
+#       - 67890....
+telegram:
+    bot_token: 
+    receiver_ids:

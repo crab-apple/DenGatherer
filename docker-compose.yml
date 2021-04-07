@@ -1,0 +1,21 @@
+version: "3"
+services:
+
+  finder-bot:
+    build: ./expose-finder
+    volumes:
+      - ./expose-finder:/config
+    depends_on:
+      - redis
+    command: [ "python3", "-u", "flathunt.py", "-c", "/config/config.yaml", "--redis_host", "redis" ]
+
+  telegram-bot:
+    build: ./telegram-bot
+    volumes:
+      - ./telegram-bot:/config
+    depends_on:
+      - redis
+    command: [ "python3", "-u", "flathunt.py", "-c", "/config/config.yaml", "--redis_host", "redis" ]
+
+  redis:
+    image: redis

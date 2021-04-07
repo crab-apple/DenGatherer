@@ -7,19 +7,9 @@
 import argparse
 import logging
 import os
-import time
 from pprint import pformat
 
 from flathunter.config import Config
-from flathunter.crawlers.crawl_ebaykleinanzeigen import CrawlEbayKleinanzeigen
-from flathunter.crawlers.crawl_idealista import CrawlIdealista
-from flathunter.crawlers.crawl_immobiliare import CrawlImmobiliare
-from flathunter.crawlers.crawl_immobilienscout import CrawlImmobilienscout
-from flathunter.crawlers.crawl_immowelt import CrawlImmowelt
-from flathunter.crawlers.crawl_wggesucht import CrawlWgGesucht
-from flathunter.crawlers.crawler_subito import CrawlSubito
-from flathunter.hunter import Hunter
-from flathunter.idmaintainer import IdMaintainer
 
 __author__ = "Jan Harrie"
 __version__ = "1.0"
@@ -28,6 +18,9 @@ __email__ = "harrymcfly@protonmail.com"
 __status__ = "Production"
 
 # init logging
+from flathunter.pubsub.redis_pubsub import RedisPubsub
+from flathunter.sender_telegram import SenderTelegram
+
 if os.name == 'posix':
     # coloring on linux
     CYELLOW = '\033[93m'
@@ -45,28 +38,6 @@ logging.basicConfig(
 __log__ = logging.getLogger('flathunt')
 
 
-def launch_flat_hunt(config):
-    """Starts the crawler / notification loop"""
-    id_watch = IdMaintainer('%s/processed_ids.db' % config.database_location())
-
-    hunter = Hunter(config, all_searchers(config), id_watch)
-    hunter.hunt_flats()
-
-    while config.get('loop', dict()).get('active', False):
-        time.sleep(config.get('loop', dict()).get('sleeping_time', 60 * 10))
-        hunter.hunt_flats()
-
-
-def all_searchers(config):
-    return [CrawlImmobilienscout(config),
-            CrawlWgGesucht(config),
-            CrawlEbayKleinanzeigen(config),
-            CrawlImmowelt(config),
-            CrawlSubito(config),
-            CrawlImmobiliare(config),
-            CrawlIdealista(config)]
-
-
 def main():
     """Processes command-line arguments, loads the config, launches the flathunter"""
     parser = argparse.ArgumentParser(description= \
@@ -78,7 +49,7 @@ def main():
                         help="Config file to use. If not set, try to use '%s/config.yaml' " %
                              os.path.dirname(os.path.abspath(__file__))
                         )
-    args = parser.parse_args()
+    args = parser.parse_known_args()[0]
 
     # load config
     config_handle = args.config
@@ -90,16 +61,15 @@ def main():
         return
     if not config.get('telegram', dict()).get('receiver_ids'):
         __log__.warning("No telegram receivers configured - nobody will get notifications.")
-    if not config.urls():
-        __log__.warning("No urls configured. No crawling will be done.")
 
     # adjust log level, if required
     if config.get('verbose'):
         __log__.setLevel(logging.DEBUG)
         __log__.debug("Settings from config: %s", pformat(config))
 
-    # start hunting for flats
-    launch_flat_hunt(config)
+    # start sending messages
+    telegram_sender = SenderTelegram(config, RedisPubsub(config))
+    telegram_sender.wait_and_process()
 
 
 if __name__ == "__main__":
