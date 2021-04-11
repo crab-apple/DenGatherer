@@ -12,5 +12,5 @@ class ExposePublisher(Processor):
         self.pubsub = pubsub
 
     def process_expose(self, expose):
-        self.pubsub.publish("exposes", json.dumps(expose))
+        self.pubsub.publish("exposes", json.dumps(expose, ensure_ascii=False))
         return expose
