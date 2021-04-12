@@ -30,6 +30,12 @@
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib-jdk8</artifactId>
         </dependency>
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>3.5.2</version>
+            <type>jar</type>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
