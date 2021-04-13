@@ -1,4 +1,6 @@
 package org.dengatherer.gatherer
 
-class Expose
+import kotlinx.serialization.Serializable
 
+@Serializable
+class Expose(val id: Int)

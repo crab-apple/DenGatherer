@@ -1,5 +1,8 @@
 package org.dengatherer.gatherer
 
+
+import org.hamcrest.MatcherAssert.assertThat
+import org.hamcrest.Matchers.equalTo
 import kotlin.test.Test
 
 internal class ExposeParserTest {
@@ -21,6 +24,14 @@ internal class ExposeParserTest {
     @Test
     fun `produces expose`() {
         ExposeParser().parse(json)
+    }
+
+    @Test
+    fun `parses id`() {
+        assertThat(
+            ExposeParser().parse(json).id,
+            equalTo(1234567)
+        )
     }
 }
 
