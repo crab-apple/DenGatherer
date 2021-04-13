@@ -17,6 +17,8 @@
         <java.version>11</java.version>
         <kotlin.version>1.4.31</kotlin.version>
         <serialization.version>1.1.0</serialization.version>
+
+        <start-class>org.dengatherer.gatherer.GathererApplication</start-class>
     </properties>
     <dependencies>
         <dependency>
