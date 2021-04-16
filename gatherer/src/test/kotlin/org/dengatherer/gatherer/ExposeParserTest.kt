@@ -2,7 +2,7 @@ package org.dengatherer.gatherer
 
 
 import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.Matchers.equalTo
+import org.hamcrest.Matchers.`is`
 import kotlin.test.Test
 
 internal class ExposeParserTest {
@@ -28,10 +28,22 @@ internal class ExposeParserTest {
 
     @Test
     fun `parses id`() {
-        assertThat(
-            ExposeParser().parse(json).id,
-            equalTo(1234567)
-        )
+        assertThat(ExposeParser().parse(json).id, `is`(1234567))
+    }
+
+    @Test
+    fun `parses urls`() {
+        val expose = ExposeParser().parse(json)
+        assertThat(expose.image, `is`("https://example.com/apartment.jpg"))
+        assertThat(expose.url, `is`("https://example.com/apartment.html"))
+    }
+
+    @Test
+    fun `parses texts`() {
+        val expose = ExposeParser().parse(json)
+        assertThat(expose.title, `is`("A cozy apartment"))
+        assertThat(expose.address, `is`("13351 Berlin (Wedding)"))
+        assertThat(expose.crawler, `is`("CrawlImmowelt"))
     }
 }
 
