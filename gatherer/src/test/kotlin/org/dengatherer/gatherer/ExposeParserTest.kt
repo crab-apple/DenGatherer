@@ -45,5 +45,23 @@ internal class ExposeParserTest {
         assertThat(expose.address, `is`("13351 Berlin (Wedding)"))
         assertThat(expose.crawler, `is`("CrawlImmowelt"))
     }
+
+    @Test
+    fun `parses rooms`() {
+        val expose = ExposeParser().parse(json)
+        assertThat(expose.rooms, `is`("2.5".toBigDecimal()))
+    }
+
+    @Test
+    fun `parses price`() {
+        val expose = ExposeParser().parse(json)
+        assertThat(expose.price, `is`("819.50".toBigDecimal()))
+    }
+
+    @Test
+    fun `parses size`() {
+        val expose = ExposeParser().parse(json)
+        assertThat(expose.size, `is`("86.03".toBigDecimal()))
+    }
 }
 
