@@ -7,7 +7,7 @@ import kotlin.test.Test
 
 internal class ExposeParserTest {
 
-    val json = """
+    private val json = """
         {
           "id": 1234567,
           "image": "https://example.com/apartment.jpg",
