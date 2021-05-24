@@ -1,6 +1,7 @@
 package org.dengatherer.gatherer.integration
 
 import io.restassured.RestAssured
+import io.restassured.http.ContentType
 import io.restassured.module.kotlin.extensions.Then
 import io.restassured.module.kotlin.extensions.When
 import org.apache.http.HttpStatus
@@ -21,6 +22,7 @@ class IntegrationTests(@LocalServerPort val port: Int) {
             get("/exposes")
         } Then {
             statusCode(HttpStatus.SC_OK)
+            contentType(ContentType.JSON)
             body(`is`("[]"))
         }
     }
