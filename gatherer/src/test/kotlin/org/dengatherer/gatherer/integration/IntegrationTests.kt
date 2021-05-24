@@ -5,18 +5,32 @@ import io.restassured.http.ContentType
 import io.restassured.module.kotlin.extensions.Then
 import io.restassured.module.kotlin.extensions.When
 import org.apache.http.HttpStatus
+import org.dengatherer.gatherer.ExposeService
 import org.hamcrest.Matchers.`is`
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.web.server.LocalServerPort
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class IntegrationTests(@LocalServerPort val port: Int) {
+class IntegrationTests {
+
+    @Autowired
+    private lateinit var exposeService: ExposeService
+
+    @BeforeEach
+    fun clearData() {
+        exposeService.clearExposes()
+    }
+
+    @BeforeEach
+    fun setupRestAssured(@LocalServerPort port: Int) {
+        RestAssured.port = port
+    }
 
     @Test
-    fun `can read exposes`() {
-
-        RestAssured.port = port
+    fun `exposes can be listed through HTTP`() {
 
         When {
             get("/exposes")
@@ -24,6 +38,34 @@ class IntegrationTests(@LocalServerPort val port: Int) {
             statusCode(HttpStatus.SC_OK)
             contentType(ContentType.JSON)
             body(`is`("[]"))
+        }
+    }
+
+    @Test
+    fun `can be notified of exposes`() {
+
+        exposeService.notifyExpose(
+            """
+        {
+          "id": 1234567,
+          "image": "https://example.com/apartment.jpg",
+          "url": "https://example.com/apartment.html",
+          "title": "A cozy apartment",
+          "rooms": "2,5",
+          "price": "819,50 €",
+          "size": "86,03 m²",
+          "address": "13351 Berlin (Wedding)",
+          "crawler": "CrawlImmowelt"
+        }
+   """
+        )
+
+        When {
+            get("/exposes")
+        } Then {
+            statusCode(HttpStatus.SC_OK)
+            contentType(ContentType.JSON)
+            body("[0].title", `is`("A cozy apartment"))
         }
     }
 }
