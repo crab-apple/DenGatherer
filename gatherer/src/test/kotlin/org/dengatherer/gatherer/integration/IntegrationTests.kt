@@ -1,20 +1,22 @@
 package org.dengatherer.gatherer.integration
 
+import io.restassured.RestAssured
 import io.restassured.module.kotlin.extensions.Then
 import io.restassured.module.kotlin.extensions.When
 import org.apache.http.HttpStatus
 import org.hamcrest.Matchers.`is`
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.test.context.junit.jupiter.SpringExtension
+import org.springframework.boot.web.server.LocalServerPort
 
-@ExtendWith(SpringExtension::class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class IntegrationTests {
+class IntegrationTests(@LocalServerPort val port: Int) {
 
     @Test
     fun `can read exposes`() {
+
+        RestAssured.port = port
+
         When {
             get("/exposes")
         } Then {
