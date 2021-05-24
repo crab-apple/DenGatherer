@@ -17,7 +17,8 @@
         <java.version>11</java.version>
         <kotlin.version>1.4.31</kotlin.version>
         <serialization.version>1.1.0</serialization.version>
-
+        <restassured.version>4.4.0</restassured.version>
+        <groovy.version>3.0.7</groovy.version>
         <start-class>org.dengatherer.gatherer.GathererApplication</start-class>
     </properties>
     <dependencies>
@@ -65,6 +66,29 @@
             <artifactId>kotlin-test-junit5</artifactId>
             <version>${kotlin.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>rest-assured</artifactId>
+            <version>${restassured.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>json-path</artifactId>
+            <version>${restassured.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>xml-path</artifactId>
+            <version>${restassured.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>kotlin-extensions</artifactId>
+            <version>${restassured.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>
