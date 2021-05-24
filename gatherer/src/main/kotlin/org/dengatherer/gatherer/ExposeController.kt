@@ -6,10 +6,8 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/exposes", produces = ["application/json"])
-class ExposesController {
+class ExposeController(val exposeService: ExposeService) {
 
     @GetMapping()
-    fun getExposes(): String {
-        return "[]"
-    }
+    fun getExposes() = exposeService.getAllExposes()
 }
