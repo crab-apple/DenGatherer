@@ -17,6 +17,6 @@ class MyListener : JedisPubSub() {
     }
 }
 
-fun main(args: Array<String>) {
+fun main() {
     RedisSubscriber().subscribe()
 }
