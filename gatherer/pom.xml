@@ -17,7 +17,7 @@
         <java.version>11</java.version>
         <kotlin.version>1.4.31</kotlin.version>
         <serialization.version>1.1.0</serialization.version>
-        <restassured.version>4.4.0</restassured.version>
+        <rest-assured.version>4.4.0</rest-assured.version>
         <groovy.version>3.0.7</groovy.version>
         <start-class>org.dengatherer.gatherer.GathererApplication</start-class>
     </properties>
@@ -70,25 +70,22 @@
         <dependency>
             <groupId>io.rest-assured</groupId>
             <artifactId>rest-assured</artifactId>
-            <version>${restassured.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>io.rest-assured</groupId>
             <artifactId>json-path</artifactId>
-            <version>${restassured.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>io.rest-assured</groupId>
             <artifactId>xml-path</artifactId>
-            <version>${restassured.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>io.rest-assured</groupId>
             <artifactId>kotlin-extensions</artifactId>
-            <version>${restassured.version}</version>
+            <version>${rest-assured.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -127,6 +124,24 @@
                         <version>${kotlin.version}</version>
                     </dependency>
                 </dependencies>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>enforce</id>
+                        <configuration>
+                            <rules>
+                                <dependencyConvergence/>
+                            </rules>
+                        </configuration>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
