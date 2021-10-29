@@ -9,11 +9,11 @@ class ExposeService {
 
     fun getAllExposes(): List<Expose> = exposes
 
-    fun notifyExpose(exposeJson: String) {
-        exposes.add(ExposeParser().parse(exposeJson))
+    fun notifyExpose(expose: Expose) {
+        exposes.add(expose)
     }
 
-    fun clearExposes(){
+    fun clearExposes() {
         exposes.clear()
     }
 }

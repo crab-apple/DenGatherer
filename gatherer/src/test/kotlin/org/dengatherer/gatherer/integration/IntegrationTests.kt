@@ -5,6 +5,7 @@ import io.restassured.http.ContentType
 import io.restassured.module.kotlin.extensions.Then
 import io.restassured.module.kotlin.extensions.When
 import org.apache.http.HttpStatus
+import org.dengatherer.gatherer.Expose
 import org.dengatherer.gatherer.ExposeService
 import org.hamcrest.Matchers.`is`
 import org.junit.jupiter.api.BeforeEach
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.web.server.LocalServerPort
+import java.math.BigDecimal
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class IntegrationTests {
@@ -44,21 +46,19 @@ class IntegrationTests {
     @Test
     fun `can be notified of exposes`() {
 
-        exposeService.notifyExpose(
-            """
-        {
-          "id": 1234567,
-          "image": "https://example.com/apartment.jpg",
-          "url": "https://example.com/apartment.html",
-          "title": "A cozy apartment",
-          "rooms": "2,5",
-          "price": "819,50 €",
-          "size": "86,03 m²",
-          "address": "13351 Berlin (Wedding)",
-          "crawler": "CrawlImmowelt"
-        }
-   """
+        val expose = Expose(
+            1234567,
+            "https://example.com/apartment.jpg",
+            "https://example.com/apartment.html",
+            "A cozy apartment",
+            BigDecimal.ONE,
+            BigDecimal.ONE,
+            BigDecimal.ONE,
+            "13351 Berlin (Wedding)",
+            "CrawlImmowelt"
         )
+
+        exposeService.notifyExpose(expose)
 
         When {
             get("/exposes")
