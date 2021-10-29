@@ -5,4 +5,4 @@ phases:
       - mvn -f gatherer/ clean package
 artifacts:
   files:
-    - target/gatherer-0.0.1-SNAPSHOT.jar
+    - gatherer/target/gatherer-0.0.1-SNAPSHOT.jar
