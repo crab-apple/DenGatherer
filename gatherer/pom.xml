@@ -20,6 +20,8 @@
         <rest-assured.version>4.4.0</rest-assured.version>
         <groovy.version>3.0.7</groovy.version>
         <start-class>org.dengatherer.gatherer.GathererApplication</start-class>
+
+        <AWSEBSecurityGroup>override-me</AWSEBSecurityGroup>
     </properties>
     <dependencies>
         <dependency>
@@ -166,6 +168,16 @@
                 </executions>
             </plugin>
         </plugins>
-    </build>
 
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+            <resource>
+                <directory>src/main/assembly</directory>
+                <targetPath>${basedir}/target</targetPath>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+    </build>
 </project>
