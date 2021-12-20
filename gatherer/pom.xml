@@ -20,8 +20,6 @@
         <rest-assured.version>4.4.0</rest-assured.version>
         <groovy.version>3.0.7</groovy.version>
         <start-class>org.dengatherer.gatherer.GathererApplication</start-class>
-
-        <AWSEBSecurityGroup>override-me</AWSEBSecurityGroup>
     </properties>
     <dependencies>
         <dependency>
@@ -167,6 +165,15 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <descriptors>
+                        <descriptor>src/assembly/artifact-for-eb.xml</descriptor>
+                    </descriptors>
+                </configuration>
+            </plugin>
         </plugins>
 
         <resources>
@@ -174,9 +181,8 @@
                 <directory>src/main/resources</directory>
             </resource>
             <resource>
-                <directory>src/main/assembly</directory>
+                <directory>src/main/awsconfig</directory>
                 <targetPath>${basedir}/target</targetPath>
-                <filtering>true</filtering>
             </resource>
         </resources>
     </build>
