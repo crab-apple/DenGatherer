@@ -11,10 +11,12 @@ import org.mockito.kotlin.argThat
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import kotlin.reflect.KProperty1
 
 
@@ -73,7 +75,11 @@ internal class ExposeControllerTest {
         }
    """
 
-        mockMvc.perform(post("/exposes").content(exposeJson))
+        mockMvc.perform(
+            post("/exposes")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(exposeJson)
+        )
 
 
         verify(exposeService).notifyExpose(
@@ -81,6 +87,19 @@ internal class ExposeControllerTest {
                 PropertyMatcher(Expose::title, "A cozy apartment")
             )
         )
+    }
+
+    @Test
+    fun `attempting to post a malformed expose results in a 400 error`() {
+
+        val exposeJson = "{}"
+
+        mockMvc.perform(
+            post("/exposes")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(exposeJson)
+
+        ).andExpect(status().isBadRequest)
     }
 }
 

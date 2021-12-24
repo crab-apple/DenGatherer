@@ -1,6 +1,7 @@
 package org.dengatherer.gatherer.integration
 
 import io.restassured.RestAssured
+import io.restassured.RestAssured.given
 import io.restassured.http.ContentType
 import io.restassured.module.kotlin.extensions.Then
 import io.restassured.module.kotlin.extensions.When
@@ -58,7 +59,9 @@ class IntegrationTests {
             }
         """.trimIndent()
 
-        RestAssured.given().body(exposeJson)
+        given()
+            .contentType(ContentType.JSON)
+            .body(exposeJson)
             .post("/exposes")
 
         When {
