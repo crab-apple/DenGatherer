@@ -3,12 +3,15 @@ import datetime
 import logging
 import re
 
+import requests
+from bs4 import BeautifulSoup
 from jsonpath_ng import parse
 from selenium import webdriver
 from selenium.common.exceptions import JavascriptException
 from selenium.webdriver.chrome.options import Options
 
-from flathunter.crawlers.abstract_crawler import Crawler
+from flathunter.crawlers.captcha.captchasolvers import get_captcha_solver
+from flathunter.crawlers.headers import Headers
 
 
 def _configure_driver(driver_path, driver_arguments):
@@ -20,16 +23,12 @@ def _configure_driver(driver_path, driver_arguments):
     return driver
 
 
-class CrawlImmobilienscout(Crawler):
-    """Implementation of Crawler interface for ImmobilienScout"""
-
-    def __init__(self, config):
-        logging.getLogger("requests").setLevel(logging.WARNING)
-        self.config = config
-
+class CrawlImmobilienscout:
     __log__ = logging.getLogger('flathunt')
     URL_PATTERN = re.compile(r'https://www\.immobilienscout24\.de')
     RESULT_LIMIT = 50
+
+    headers = Headers()
 
     def __init__(self, config):
         logging.getLogger("requests").setLevel(logging.WARNING)
@@ -216,3 +215,21 @@ class CrawlImmobilienscout(Crawler):
 
         self.__log__.debug('extracted: %d', len(entries))
         return entries
+
+    def _get_soup_from_url(self, url, driver=None, captcha_api_key=None, checkbox=None, afterlogin_string=None):
+        """Creates a Soup object from the HTML at the provided URL"""
+
+        driver.get(url)
+        if re.search("g-recaptcha", driver.page_source):
+            get_captcha_solver(driver, checkbox).resolve_captcha(afterlogin_string, captcha_api_key)
+        return BeautifulSoup(driver.page_source, 'html.parser')
+
+    def crawl(self, url, max_pages=None):
+        """Load as many exposes as possible from the provided URL"""
+        if re.search(self.URL_PATTERN, url):
+            try:
+                return self._get_results(url, max_pages)
+            except requests.exceptions.ConnectionError:
+                self.__log__.warning("Connection to %s failed. Retrying.", url.split('/')[2])
+                return []
+        return []
