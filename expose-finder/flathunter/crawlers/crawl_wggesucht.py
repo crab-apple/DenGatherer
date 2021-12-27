@@ -6,6 +6,7 @@ import requests
 from bs4 import BeautifulSoup
 
 from flathunter.crawlers.abstract_crawler import Crawler
+from flathunter.crawlers.captchasolver import resolve_captcha
 from flathunter.string_utils import remove_prefix
 
 
