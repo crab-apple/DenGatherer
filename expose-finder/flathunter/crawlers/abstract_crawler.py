@@ -4,11 +4,10 @@ import re
 
 import requests
 from bs4 import BeautifulSoup
-from random_user_agent.params import HardwareType, Popularity
-from random_user_agent.user_agent import UserAgent
 
 from flathunter import proxies
 from flathunter.crawlers.captcha.captchasolvers import get_captcha_solver
+from flathunter.crawlers.headers import Headers
 
 
 class Crawler:
@@ -20,28 +19,7 @@ class Crawler:
     def __init__(self, config):
         self.config = config
 
-    user_agent_rotator = UserAgent(popularity=[Popularity.COMMON._value_],
-                                   hardware_types=[HardwareType.COMPUTER._value_])
-
-    HEADERS = {
-        'Connection': 'keep-alive',
-        'Pragma': 'no-cache',
-        'Cache-Control': 'no-cache',
-        'Upgrade-Insecure-Requests': '1',
-        'User-Agent': user_agent_rotator.get_random_user_agent(),
-        'Accept': 'text/html,application/xhtml+xml,application/xml;'
-                  'q=0.9,image/webp,image/apng,*/*;q=0.8,'
-                  'application/signed-exchange;v=b3;q=0.9',
-        'Sec-Fetch-Site': 'none',
-        'Sec-Fetch-Mode': 'navigate',
-        'Sec-Fetch-User': '?1',
-        'Sec-Fetch-Dest': 'document',
-        'Accept-Language': 'en-US,en;q=0.9',
-    }
-
-    def rotate_user_agent(self):
-        """Choose a new random user agent"""
-        self.HEADERS['User-Agent'] = self.user_agent_rotator.get_random_user_agent()
+    headers = Headers()
 
     # pylint: disable=unused-argument
     def get_page(self, search_url, driver=None, page_no=None):
@@ -51,8 +29,8 @@ class Crawler:
     def _get_soup_from_url(self, url, driver=None, captcha_api_key=None, checkbox=None, afterlogin_string=None):
         """Creates a Soup object from the HTML at the provided URL"""
 
-        self.rotate_user_agent()
-        resp = requests.get(url, headers=self.HEADERS)
+        self.headers.rotate_user_agent()
+        resp = requests.get(url, headers=self.headers.headers)
         if resp.status_code != 200:
             self.__log__.error("Got response (%i): %s", resp.status_code, resp.content)
         if self.config.use_proxy():
@@ -73,11 +51,11 @@ class Crawler:
         while not resolved:
             proxies_list = proxies.get_proxies()
             for proxy in proxies_list:
-                self.rotate_user_agent()
+                self.headers.rotate_user_agent()
 
                 try:
                     # Very low proxy read timeout, or it will get stuck on slow proxies
-                    resp = requests.get(url, headers=self.HEADERS, proxies={"http": proxy, "https": proxy},
+                    resp = requests.get(url, headers=self.headers.headers, proxies={"http": proxy, "https": proxy},
                                         timeout=(20, 0.1))
 
                     if resp.status_code != 200:
