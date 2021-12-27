@@ -17,15 +17,12 @@ class CaptchaSolver:
     def __init__(self, driver: selenium.webdriver.Chrome):
         self.driver = driver
 
-    def resolve_captcha(self, checkbox: bool, afterlogin_string, api_key):
+    def resolve_captcha(self, afterlogin_string, api_key):
         iframe_present = self._check_if_iframe_visible()
-        if checkbox is False and afterlogin_string == "" and iframe_present:
+        if afterlogin_string == "" and iframe_present:
             self._solve(api_key)
         else:
-            if checkbox:
-                self._clickcaptcha(checkbox)
-            else:
-                self._wait_for_captcha_resolution(checkbox, afterlogin_string)
+            self._wait_for_captcha_resolution(afterlogin_string)
 
     def _check_if_iframe_not_visible(self):
         try:
@@ -43,28 +40,13 @@ class CaptchaSolver:
         except NoSuchElementException:
             print("No iframe found, therefore no chaptcha verification necessary")
 
-    def _wait_for_captcha_resolution(self, checkbox: bool, afterlogin_string=""):
-        if checkbox:
-            try:
-                element = WebDriverWait(self.driver, 120).until(
-                    EC.visibility_of_element_located((By.CLASS_NAME, "recaptcha-checkbox-checked"))
-                )
-            except selenium.common.exceptions.TimeoutException:
-                print("Selenium.Timeoutexception")
-        else:
-            xpath_string = f"//*[contains(text(), '{afterlogin_string}')]"
-            try:
-                element = WebDriverWait(self.driver, 120).until(
-                    EC.visibility_of_element_located((By.XPATH, xpath_string)))
-            except selenium.common.exceptions.TimeoutException:
-                print("Selenium.Timeoutexception")
-
-    def _clickcaptcha(self, checkbox: bool):
-        self.driver.switch_to.frame(self.driver.find_element_by_tag_name("iframe"))
-        recaptcha_checkbox = self.driver.find_element_by_class_name("recaptcha-checkbox-checkmark")
-        recaptcha_checkbox.click()
-        self._wait_for_captcha_resolution(checkbox)
-        self.driver.switch_to.default_content()
+    def _wait_for_captcha_resolution(self, afterlogin_string=""):
+        xpath_string = f"//*[contains(text(), '{afterlogin_string}')]"
+        try:
+            element = WebDriverWait(self.driver, 120).until(
+                EC.visibility_of_element_located((By.XPATH, xpath_string)))
+        except selenium.common.exceptions.TimeoutException:
+            print("Selenium.Timeoutexception")
 
     def _solve(self, api_key):
         google_site_key = self.driver.find_element_by_class_name("g-recaptcha").get_attribute("data-sitekey")

@@ -8,7 +8,7 @@ from random_user_agent.params import HardwareType, Popularity
 from random_user_agent.user_agent import UserAgent
 
 from flathunter import proxies
-from flathunter.crawlers.captchasolver import CaptchaSolver
+from flathunter.crawlers.captcha.captchasolvers import get_captcha_solver
 
 
 class Crawler:
@@ -60,7 +60,7 @@ class Crawler:
         if driver is not None:
             driver.get(url)
             if re.search("g-recaptcha", driver.page_source):
-                CaptchaSolver(driver).resolve_captcha(checkbox, afterlogin_string, captcha_api_key)
+                get_captcha_solver(driver, checkbox).resolve_captcha(afterlogin_string, captcha_api_key)
             return BeautifulSoup(driver.page_source, 'html.parser')
         return BeautifulSoup(resp.content, 'html.parser')
 

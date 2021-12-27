@@ -6,7 +6,7 @@ import requests
 from bs4 import BeautifulSoup
 
 from flathunter.crawlers.abstract_crawler import Crawler
-from flathunter.crawlers.captchasolver import CaptchaSolver
+from flathunter.crawlers.captcha.captchasolvers import get_captcha_solver
 from flathunter.string_utils import remove_prefix
 
 
@@ -107,6 +107,6 @@ class CrawlWgGesucht(Crawler):
         if driver is not None:
             driver.get(url)
             if re.search("g-recaptcha", driver.page_source):
-                CaptchaSolver(driver).resolve_captcha(checkbox, afterlogin_string, captcha_api_key, )
+                get_captcha_solver(driver, checkbox).resolve_captcha(afterlogin_string, captcha_api_key)
             return BeautifulSoup(driver.page_source, 'html.parser')
         return BeautifulSoup(resp.content, 'html.parser')
