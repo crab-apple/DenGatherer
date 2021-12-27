@@ -8,7 +8,7 @@ from random_user_agent.params import HardwareType, Popularity
 from random_user_agent.user_agent import UserAgent
 
 from flathunter import proxies
-from flathunter.crawlers.captchasolver import resolve_captcha
+from flathunter.crawlers.captchasolver import CaptchaSolver
 
 
 class Crawler:
@@ -60,7 +60,7 @@ class Crawler:
         if driver is not None:
             driver.get(url)
             if re.search("g-recaptcha", driver.page_source):
-                resolve_captcha(driver, checkbox, afterlogin_string, captcha_api_key, self.__log__)
+                CaptchaSolver(driver).resolve_captcha(checkbox, afterlogin_string, captcha_api_key)
             return BeautifulSoup(driver.page_source, 'html.parser')
         return BeautifulSoup(resp.content, 'html.parser')
 
@@ -132,5 +132,5 @@ class Crawler:
         return type(self).__name__
 
     def get_expose_details(self, expose):
-        """Loads additional detalis for an expose. Should be implemented in the subclass"""
+        """Loads additional details for an expose. Should be implemented in the subclass"""
         return expose
