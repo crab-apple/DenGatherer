@@ -30,7 +30,7 @@ google_maps_api:
     def test_address_processor(self):
         crawler = DummyCrawler(addresses_as_links=True)
         config = Config(string=self.DUMMY_CONFIG)
-        exposes = crawler.get_results("https://www.example.com/search")
+        exposes = crawler._get_results("https://www.example.com/search")
         for expose in exposes:
             self.assertTrue(expose['address'].startswith('http'), "Expected addresses not yet to be processed")
         chain = ProcessorChain.builder(config) \

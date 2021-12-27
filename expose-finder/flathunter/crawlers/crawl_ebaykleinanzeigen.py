@@ -33,7 +33,7 @@ class CrawlEbayKleinanzeigen(Crawler):
 
     def get_page(self, url):
         """Applies a page number to a formatted search URL and fetches the exposes at that page"""
-        return self.get_soup_from_url(url)
+        return self._get_soup_from_url(url)
 
     def get_expose_details(self, expose):
         soup = self.get_page(expose['url'])
@@ -99,7 +99,7 @@ class CrawlEbayKleinanzeigen(Crawler):
                 'size': size,
                 'rooms': rooms,
                 'address': address,
-                'crawler': self.get_name()
+                'crawler': 'ebaykleinanzeigen'
             }
             entries.append(details)
 

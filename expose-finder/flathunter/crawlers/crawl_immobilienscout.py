@@ -54,7 +54,7 @@ class CrawlImmobilienscout(Crawler):
             if self.captcha_api_key is not None or self.driver_executable_path is not None:
                 self.driver = _configure_driver(self.driver_executable_path, self.driver_arguments)
 
-    def get_results(self, search_url, max_pages=None):
+    def _get_results(self, search_url, max_pages=None):
         """Loads the exposes from the ImmoScout site, starting at the provided URL"""
         # convert to paged URL
         # if '/P-' in search_url:
@@ -122,7 +122,7 @@ class CrawlImmobilienscout(Crawler):
                           "https://www.static-immobilienscout24.de/statpic/placeholder_house/496c95154de31a357afa978cdb7f15f0_placeholder_medium.png"),
             'title': entry["title"],
             'address': entry["address"]["description"]["text"],
-            'crawler': self.get_name(),
+            'crawler': 'immobilienscout',
             'price': str(entry["price"]["value"]),
             'size': str(entry["livingSpace"]),
             'rooms': str(entry["numberOfRooms"])
@@ -130,12 +130,12 @@ class CrawlImmobilienscout(Crawler):
 
     def get_page(self, search_url, driver=None, page_no=None):
         """Applies a page number to a formatted search URL and fetches the exposes at that page"""
-        return self.get_soup_from_url(search_url.format(page_no), driver=driver, captcha_api_key=self.captcha_api_key,
-                                      checkbox=self.checkbox, afterlogin_string=self.afterlogin_string)
+        return self._get_soup_from_url(search_url.format(page_no), driver=driver, captcha_api_key=self.captcha_api_key,
+                                       checkbox=self.checkbox, afterlogin_string=self.afterlogin_string)
 
     def get_expose_details(self, expose):
         """Loads additional details for an expose by processing the expose detail URL"""
-        soup = self.get_soup_from_url(expose['url'])
+        soup = self._get_soup_from_url(expose['url'])
         date = soup.find('dd', {"class": "is24qa-bezugsfrei-ab"})
         expose['from'] = datetime.datetime.now().strftime("%2d.%2m.%Y")
         if date is not None:
@@ -194,7 +194,7 @@ class CrawlImmobilienscout(Crawler):
                 'image': image,
                 'title': title_el.text.strip().replace('NEU', ''),
                 'address': address,
-                'crawler': self.get_name()
+                'crawler': 'immobilienscout'
             }
             if len(attr_els) > 2:
                 details['price'] = attr_els[0].text.strip().split(' ')[0].strip()

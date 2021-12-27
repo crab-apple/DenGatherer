@@ -46,9 +46,9 @@ class Crawler:
     # pylint: disable=unused-argument
     def get_page(self, search_url, driver=None, page_no=None):
         """Applies a page number to a formatted search URL and fetches the exposes at that page"""
-        return self.get_soup_from_url(search_url)
+        return self._get_soup_from_url(search_url)
 
-    def get_soup_from_url(self, url, driver=None, captcha_api_key=None, checkbox=None, afterlogin_string=None):
+    def _get_soup_from_url(self, url, driver=None, captcha_api_key=None, checkbox=None, afterlogin_string=None):
         """Creates a Soup object from the HTML at the provided URL"""
 
         self.rotate_user_agent()
@@ -56,7 +56,7 @@ class Crawler:
         if resp.status_code != 200:
             self.__log__.error("Got response (%i): %s", resp.status_code, resp.content)
         if self.config.use_proxy():
-            return self.get_soup_with_proxy(url)
+            return self._get_soup_with_proxy(url)
         if driver is not None:
             driver.get(url)
             if re.search("g-recaptcha", driver.page_source):
@@ -64,7 +64,7 @@ class Crawler:
             return BeautifulSoup(driver.page_source, 'html.parser')
         return BeautifulSoup(resp.content, 'html.parser')
 
-    def get_soup_with_proxy(self, url):
+    def _get_soup_with_proxy(self, url):
         """Will try proxies until it's possible to crawl and return a soup"""
         resolved = False
         resp = None
@@ -104,7 +104,7 @@ class Crawler:
         raise Exception("Method not implemented")
 
     # pylint: disable=unused-argument
-    def get_results(self, search_url, max_pages=None):
+    def _get_results(self, search_url, max_pages=None):
         """Loads the exposes from the site, starting at the provided URL"""
         self.__log__.debug("Got search URL %s", search_url)
 
@@ -121,15 +121,11 @@ class Crawler:
         """Load as many exposes as possible from the provided URL"""
         if re.search(self.URL_PATTERN, url):
             try:
-                return self.get_results(url, max_pages)
+                return self._get_results(url, max_pages)
             except requests.exceptions.ConnectionError:
                 self.__log__.warning("Connection to %s failed. Retrying.", url.split('/')[2])
                 return []
         return []
-
-    def get_name(self):
-        """Returns the name of this crawler"""
-        return type(self).__name__
 
     def get_expose_details(self, expose):
         """Loads additional details for an expose. Should be implemented in the subclass"""

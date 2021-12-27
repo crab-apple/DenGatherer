@@ -64,7 +64,7 @@ class CrawlWgGesucht(Crawler):
                 'size': size[0],
                 'rooms': rooms,
                 'address': url,
-                'crawler': self.get_name()
+                'crawler': 'wggesucht'
             }
             if len(dates) == 2:
                 details['from'] = dates[0]
@@ -80,12 +80,12 @@ class CrawlWgGesucht(Crawler):
 
     def load_address(self, url):
         """Extract address from expose itself"""
-        response = self.get_soup_from_url(url)
+        response = self._get_soup_from_url(url)
         address = ' '.join(response.find('div', {"class": "col-sm-4 mb10"})
                            .find("a", {"href": "#mapContainer"}).text.strip().split())
         return address
 
-    def get_soup_from_url(self, url, driver=None, captcha_api_key=None, checkbox=None, afterlogin_string=None):
+    def _get_soup_from_url(self, url, driver=None, captcha_api_key=None, checkbox=None, afterlogin_string=None):
         """
         Creates a Soup object from the HTML at the provided URL
 
@@ -103,7 +103,7 @@ class CrawlWgGesucht(Crawler):
         if resp.status_code != 200:
             self.__log__.error("Got response (%i): %s", resp.status_code, resp.content)
         if self.config.use_proxy():
-            return self.get_soup_with_proxy(url)
+            return self._get_soup_with_proxy(url)
         if driver is not None:
             driver.get(url)
             if re.search("g-recaptcha", driver.page_source):

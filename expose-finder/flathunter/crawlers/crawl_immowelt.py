@@ -95,7 +95,7 @@ class CrawlImmowelt(Crawler):
                 'price': price,
                 'size': size,
                 'address': address,
-                'crawler': self.get_name()
+                'crawler': 'immowelt'
             }
             entries.append(details)
 

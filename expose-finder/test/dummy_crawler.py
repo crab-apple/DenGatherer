@@ -16,7 +16,7 @@ class DummyCrawler(Crawler):
         self.titlewords = titlewords
         self.addresses_as_links = addresses_as_links
 
-    def get_results(self, search_url, max_pages=None):
+    def _get_results(self, search_url, max_pages=None):
         self.__log__.debug("Generating dummy results")
         entries = []
         for _ in range(randint(20, 40)):
@@ -28,7 +28,7 @@ class DummyCrawler(Crawler):
                 'price': "%d EUR" % (randint(300, 3000)),
                 'size': "%d m^2" % (randint(15, 150)),
                 'rooms': "%d" % (randint(1, 5)),
-                'crawler': self.get_name()
+                'crawler': 'dummy_crawler'
             }
             if self.addresses_as_links:
                 details['address'] = "https://www.example.com/expose/" + str(expose_id)
