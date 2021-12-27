@@ -4,9 +4,20 @@ import logging
 import re
 
 from jsonpath_ng import parse
+from selenium import webdriver
 from selenium.common.exceptions import JavascriptException
+from selenium.webdriver.chrome.options import Options
 
 from flathunter.crawlers.abstract_crawler import Crawler
+
+
+def _configure_driver(driver_path, driver_arguments):
+    chrome_options = Options()
+    if driver_arguments is not None:
+        for driver_argument in driver_arguments:
+            chrome_options.add_argument(driver_argument)
+    driver = webdriver.Chrome(executable_path=driver_path, options=chrome_options)
+    return driver
 
 
 class CrawlImmobilienscout(Crawler):
@@ -41,7 +52,7 @@ class CrawlImmobilienscout(Crawler):
             else:
                 self.afterlogin_string = captcha_config.get('afterlogin_string', '')
             if self.captcha_api_key is not None or self.driver_executable_path is not None:
-                self.driver = self.configure_driver(self.driver_executable_path, self.driver_arguments)
+                self.driver = _configure_driver(self.driver_executable_path, self.driver_arguments)
 
     def get_results(self, search_url, max_pages=None):
         """Loads the exposes from the ImmoScout site, starting at the provided URL"""

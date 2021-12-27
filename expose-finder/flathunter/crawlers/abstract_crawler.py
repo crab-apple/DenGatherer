@@ -10,7 +10,6 @@ from random_user_agent.params import HardwareType, Popularity
 from random_user_agent.user_agent import UserAgent
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
-from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
@@ -45,14 +44,6 @@ class Crawler:
         'Sec-Fetch-Dest': 'document',
         'Accept-Language': 'en-US,en;q=0.9',
     }
-
-    def configure_driver(self, driver_path, driver_arguments):
-        chrome_options = Options()
-        if driver_arguments is not None:
-            for driver_argument in driver_arguments:
-                chrome_options.add_argument(driver_argument)
-        driver = webdriver.Chrome(executable_path=driver_path, options=chrome_options)
-        return driver
 
     def rotate_user_agent(self):
         """Choose a new random user agent"""
