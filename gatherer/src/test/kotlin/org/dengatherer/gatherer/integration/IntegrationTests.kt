@@ -47,15 +47,15 @@ class IntegrationTests {
 
         val exposeJson = """
             {
-              "id": 1234567,
+              "id": "1234567",
               "image": "https://example.com/apartment.jpg",
               "url": "https://example.com/apartment.html",
               "title": "A cozy apartment",
-              "rooms": "2",
-              "price": "819,50 €",
-              "size": "86,03 m²",
+              "rooms": "2.5",
+              "coldRent": "819.50",
+              "size": "86.03",
               "address": "13351 Berlin (Wedding)",
-              "crawler": "CrawlImmowelt"
+              "source": "CrawlImmowelt"
             }
         """.trimIndent()
 

@@ -2,14 +2,19 @@ package org.dengatherer.gatherer
 
 import java.math.BigDecimal
 
-class Expose(
-    val id: Int,
-    val image: String,
+data class Expose(
+    val id: String,
+    val source: String,
     val url: String,
+    val imageUrl: String?,
     val title: String,
-    val rooms: BigDecimal,
-    val price: BigDecimal,
+    val address: String?,
+    val district: String?,
+    val locationLat: Double?,
+    val locationLong: Double?,
     val size: BigDecimal,
-    val address: String,
-    val crawler: String,
+    val rooms: BigDecimal?,
+    val coldRent: BigDecimal,
+    val comments: String?,
+    val originalData: String?
 )

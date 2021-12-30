@@ -32,27 +32,32 @@ internal class ExposeControllerTest {
     @Test
     fun `returns exposes`() {
 
-        fun expose(id: Int) = Expose(
+        fun expose(id: String) = Expose(
             id,
-            "the-image",
+            "the-crawler",
             "the-url",
+            "the-image",
             "expose-num-${id}",
+            null,
+            null,
+            null,
+            null,
             2.toBigDecimal(),
             700.toBigDecimal(),
             50.toBigDecimal(),
-            "the address",
-            "the crawler"
+            null,
+            null,
         )
 
         `when`(exposeService.getAllExposes())
-            .thenReturn(listOf(expose(1), expose(2)))
+            .thenReturn(listOf(expose("e1"), expose("e2")))
 
         mockMvc.perform(get("/exposes"))
             .andExpect(
                 content().string(
                     allOf(
-                        containsString("expose-num-1"),
-                        containsString("expose-num-2")
+                        containsString("e1"),
+                        containsString("e2")
                     )
                 )
             )
@@ -63,15 +68,15 @@ internal class ExposeControllerTest {
 
         val exposeJson = """
         {
-          "id": 1234567,
+          "id": "1234567",
           "image": "https://example.com/apartment.jpg",
           "url": "https://example.com/apartment.html",
           "title": "A cozy apartment",
-          "rooms": "2,5",
-          "price": "819,50 €",
-          "size": "86,03 m²",
+          "rooms": "2.5",
+          "coldRent": "819.50",
+          "size": "86.03",
           "address": "13351 Berlin (Wedding)",
-          "crawler": "CrawlImmowelt"
+          "source": "CrawlImmowelt"
         }
    """
 
