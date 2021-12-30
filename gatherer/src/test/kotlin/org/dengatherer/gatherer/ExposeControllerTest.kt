@@ -66,8 +66,8 @@ internal class ExposeControllerTest {
     @Test
     fun `posts expose`() {
 
-        val exposeJson = """
-        {
+        val exposesJson = """
+        [{
           "id": "1234567",
           "image": "https://example.com/apartment.jpg",
           "url": "https://example.com/apartment.html",
@@ -77,13 +77,13 @@ internal class ExposeControllerTest {
           "size": "86.03",
           "address": "13351 Berlin (Wedding)",
           "source": "CrawlImmowelt"
-        }
+        }]
    """
 
         mockMvc.perform(
             post("/exposes")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(exposeJson)
+                .content(exposesJson)
         )
 
 
@@ -97,12 +97,12 @@ internal class ExposeControllerTest {
     @Test
     fun `attempting to post a malformed expose results in a 400 error`() {
 
-        val exposeJson = "{}"
+        val exposesJson = "[{}]"
 
         mockMvc.perform(
             post("/exposes")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(exposeJson)
+                .content(exposesJson)
 
         ).andExpect(status().isBadRequest)
     }

@@ -14,7 +14,9 @@ class ExposeController(val exposeService: ExposeService) {
     fun getExposes() = exposeService.getAllExposes()
 
     @PostMapping()
-    fun postExpose(@RequestBody expose: Expose) {
-        exposeService.notifyExpose(expose)
+    fun postExpose(@RequestBody exposes: List<Expose>) {
+        for (expose in exposes) {
+            exposeService.notifyExpose(expose)
+        }
     }
 }

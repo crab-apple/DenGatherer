@@ -45,8 +45,8 @@ class IntegrationTests {
     @Test
     fun `can be notified of exposes`() {
 
-        val exposeJson = """
-            {
+        val exposesJson = """
+            [{
               "id": "1234567",
               "image": "https://example.com/apartment.jpg",
               "url": "https://example.com/apartment.html",
@@ -56,12 +56,12 @@ class IntegrationTests {
               "size": "86.03",
               "address": "13351 Berlin (Wedding)",
               "source": "CrawlImmowelt"
-            }
+            }]
         """.trimIndent()
 
         given()
             .contentType(ContentType.JSON)
-            .body(exposeJson)
+            .body(exposesJson)
             .post("/exposes")
 
         When {
