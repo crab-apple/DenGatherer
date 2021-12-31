@@ -1,19 +1,8 @@
 package org.dengatherer.gatherer
 
-import org.springframework.stereotype.Service
+interface ExposeDAO {
 
-@Service
-class ExposeDAO {
+    fun getAllExposes(): List<Expose>
 
-    private val exposes = mutableMapOf<String, Expose>()
-
-    fun getAllExposes(): List<Expose> = exposes.values.toList()
-
-    fun addIfNotExists(expose: Expose) {
-        exposes.putIfAbsent(expose.id, expose)
-    }
-
-    fun clearExposes() {
-        exposes.clear()
-    }
+    fun addIfNotExists(expose: Expose)
 }

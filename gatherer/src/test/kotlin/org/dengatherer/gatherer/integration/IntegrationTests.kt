@@ -7,19 +7,21 @@ import io.restassured.module.kotlin.extensions.Then
 import io.restassured.module.kotlin.extensions.When
 import org.apache.http.HttpStatus
 import org.dengatherer.gatherer.ExposeDAO
-import org.dengatherer.gatherer.ExposeService
+import org.dengatherer.gatherer.InMemoryExposeDAO
 import org.hamcrest.Matchers.`is`
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.web.server.LocalServerPort
+import org.springframework.test.context.ActiveProfiles
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("test")
 class IntegrationTests {
 
     @Autowired
-    private lateinit var exposeDAO: ExposeDAO
+    private lateinit var exposeDAO: InMemoryExposeDAO
 
     @BeforeEach
     fun clearData() {
