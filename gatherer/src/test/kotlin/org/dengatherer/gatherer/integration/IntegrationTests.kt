@@ -6,6 +6,7 @@ import io.restassured.http.ContentType
 import io.restassured.module.kotlin.extensions.Then
 import io.restassured.module.kotlin.extensions.When
 import org.apache.http.HttpStatus
+import org.dengatherer.gatherer.ExposeDAO
 import org.dengatherer.gatherer.ExposeService
 import org.hamcrest.Matchers.`is`
 import org.junit.jupiter.api.BeforeEach
@@ -18,11 +19,11 @@ import org.springframework.boot.web.server.LocalServerPort
 class IntegrationTests {
 
     @Autowired
-    private lateinit var exposeService: ExposeService
+    private lateinit var exposeDAO: ExposeDAO
 
     @BeforeEach
     fun clearData() {
-        exposeService.clearExposes()
+        exposeDAO.clearExposes()
     }
 
     @BeforeEach

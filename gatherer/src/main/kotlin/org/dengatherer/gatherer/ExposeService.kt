@@ -3,17 +3,12 @@ package org.dengatherer.gatherer
 import org.springframework.stereotype.Service
 
 @Service
-class ExposeService {
+class ExposeService(val exposeDAO: ExposeDAO) {
 
-    private val exposes = mutableListOf<Expose>()
-
-    fun getAllExposes(): List<Expose> = exposes
+    fun getAllExposes(): List<Expose> = exposeDAO.getAllExposes()
 
     fun notifyExpose(expose: Expose) {
-        exposes.add(expose)
+        exposeDAO.addIfNotExists(expose)
     }
 
-    fun clearExposes() {
-        exposes.clear()
-    }
 }
