@@ -36,6 +36,7 @@ internal class ExposeControllerTest {
             id,
             "the-crawler",
             "the-url",
+            "the-provider",
             "the-image",
             "expose-num-${id}",
             null,

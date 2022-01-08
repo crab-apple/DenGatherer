@@ -3,6 +3,7 @@ package org.dengatherer.gatherer
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
 import org.springframework.data.mongodb.core.mapping.Field
+import org.springframework.stereotype.Indexed
 import java.math.BigDecimal
 import java.time.Instant
 
@@ -17,6 +18,9 @@ data class Expose(
 
     @Field("url")
     val url: String,
+
+    @Field("provider")
+    val provider: String?,
 
     @Field("imageUrl")
     val imageUrl: String?,
