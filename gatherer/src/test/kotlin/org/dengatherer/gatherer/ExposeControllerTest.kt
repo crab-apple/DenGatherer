@@ -49,7 +49,7 @@ internal class ExposeControllerTest {
             50.toBigDecimal(),
             null,
             null,
-            Instant.parse("2022-02-02T02:02:02.222Z"),
+            Availability.new(Instant.parse("2022-02-02T02:02:02.222Z")),
         )
 
         `when`(exposeService.getAllExposes())

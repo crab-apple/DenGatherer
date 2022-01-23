@@ -26,7 +26,7 @@ class ExposeService(val exposeDAO: ExposeDAO) {
             exposeInput.coldRent,
             exposeInput.comments,
             exposeInput.originalData,
-            Instant.now(),
+            Availability.new(Instant.now()),
         )
 
         exposeDAO.addIfNotExists(expose)

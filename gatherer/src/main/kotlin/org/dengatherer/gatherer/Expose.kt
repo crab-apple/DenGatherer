@@ -4,7 +4,6 @@ import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
 import org.springframework.data.mongodb.core.mapping.Field
 import java.math.BigDecimal
-import java.time.Instant
 
 @Document("exposes")
 data class Expose(
@@ -54,6 +53,6 @@ data class Expose(
     @Field("originalData")
     val originalData: String?,
 
-    @Field("dateReceived")
-    val dateReceived: Instant,
+    @Field("availability")
+    val availability: Availability,
 )
