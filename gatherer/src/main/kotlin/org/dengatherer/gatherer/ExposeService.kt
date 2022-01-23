@@ -8,9 +8,27 @@ class ExposeService(val exposeDAO: ExposeDAO) {
 
     fun getAllExposes(): List<Expose> = exposeDAO.getAllExposes()
 
-    fun notifyExpose(expose: Expose) {
-        expose.dateReceived = Instant.now()
+    fun notifyExpose(exposeInput: ExposeInput) {
+
+        val expose = Expose(
+            exposeInput.id,
+            exposeInput.source,
+            exposeInput.url,
+            exposeInput.provider,
+            exposeInput.imageUrl,
+            exposeInput.title,
+            exposeInput.address,
+            exposeInput.district,
+            exposeInput.locationLat,
+            exposeInput.locationLong,
+            exposeInput.size,
+            exposeInput.rooms,
+            exposeInput.coldRent,
+            exposeInput.comments,
+            exposeInput.originalData,
+            Instant.now(),
+        )
+
         exposeDAO.addIfNotExists(expose)
     }
-
 }

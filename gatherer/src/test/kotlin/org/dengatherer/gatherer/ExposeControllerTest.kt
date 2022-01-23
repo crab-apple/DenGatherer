@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import java.time.Instant
 import kotlin.reflect.KProperty1
 
 
@@ -48,6 +49,7 @@ internal class ExposeControllerTest {
             50.toBigDecimal(),
             null,
             null,
+            Instant.parse("2022-02-02T02:02:02.222Z"),
         )
 
         `when`(exposeService.getAllExposes())
@@ -90,7 +92,7 @@ internal class ExposeControllerTest {
 
         verify(exposeService).notifyExpose(
             argThat(
-                PropertyMatcher(Expose::title, "A cozy apartment")
+                PropertyMatcher(ExposeInput::title, "A cozy apartment")
             )
         )
     }
